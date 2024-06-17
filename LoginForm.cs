@@ -10,11 +10,21 @@ using System.Windows.Forms;
 
 namespace Tratatui
 {
-    public partial class MainForm : Form
+    public partial class LoginForm : Form
     {
-        public MainForm()
+        public LoginForm()
         {
             InitializeComponent();
+        }
+
+        private void LoginAsGuest_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void LoginAsStaff_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
