@@ -17,7 +17,7 @@ namespace Tratatui
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void OrderButton_Click(object sender, EventArgs e)
         {
 
         }

@@ -19,12 +19,14 @@ namespace Tratatui
 
         private void LoginAsGuest_Click(object sender, EventArgs e)
         {
-            
+            GuestForm guest = new GuestForm();
+            guest.Show();
+            this.Hide();
         }
 
         private void LoginAsStaff_Click(object sender, EventArgs e)
         {
-
+            
         }
     }
 }
