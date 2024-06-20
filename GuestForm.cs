@@ -20,6 +20,10 @@ namespace Tratatui
         private void OrderButton_Click(object sender, EventArgs e)
         {
             //Создать в БД заказ с выбранными блюдами
+            WaitingForm wait = new WaitingForm();
+            wait.guestForm = this;
+            wait.Show();
+            this.Enabled = false;
         }
 
         private void GuestForm_Load(object sender, EventArgs e)
@@ -44,7 +48,8 @@ namespace Tratatui
                                                  selection.SubItems[3].Bounds.Y + selection.ListView.Left);
                 amtSelector.Visible = true;
                 amtSelector.Focus();
-            } else amtSelector.Visible = false; 
+            }
+            else amtSelector.Visible = false;
         }
 
         private void amtSelector_ValueChanged(object sender, EventArgs e)
@@ -68,7 +73,8 @@ namespace Tratatui
                     target.SubItems.Add(amtSelector.Value.ToString());
                     target.SubItems.Add("$" + (amtSelector.Value * decimal.Parse(selection.SubItems[2].Text.Substring(1))).ToString());
                     OrderList.Items.Add(target);
-                } else
+                }
+                else
                 {
                     if (amtSelector.Value == 0) target.Remove();
                     else
@@ -82,9 +88,14 @@ namespace Tratatui
             else amtSelector.Visible = false;
 
             decimal sum = 0;
-            foreach (ListViewItem item in OrderList.Items) 
+            foreach (ListViewItem item in OrderList.Items)
                 sum += decimal.Parse(item.SubItems[2].Text.Substring(1));
             TotalCostLabel.Text = "$" + sum.ToString();
+        }
+
+        private void GuestForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (Application.OpenForms.Count == 1) Application.Exit();
         }
     }
 }

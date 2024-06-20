@@ -168,6 +168,7 @@ namespace Tratatui
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "GuestForm";
             Text = "Трататуй - Меню";
+            FormClosed += GuestForm_FormClosed;
             Load += GuestForm_Load;
             ((System.ComponentModel.ISupportInitialize)amtSelector).EndInit();
             ResumeLayout(false);
