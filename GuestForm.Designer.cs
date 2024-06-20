@@ -29,88 +29,164 @@ namespace Tratatui
         /// </summary>
         private void InitializeComponent()
         {
-            this.MenuItems = new System.Windows.Forms.ListBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.OrderButton = new System.Windows.Forms.Button();
-            this.TotalCostLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
-            // 
-            // MenuItems
-            // 
-            this.MenuItems.FormattingEnabled = true;
-            this.MenuItems.Location = new System.Drawing.Point(13, 13);
-            this.MenuItems.MultiColumn = true;
-            this.MenuItems.Name = "MenuItems";
-            this.MenuItems.ScrollAlwaysVisible = false;
-            this.MenuItems.Size = new System.Drawing.Size(556, 420);
-            this.MenuItems.TabIndex = 0;
+            label1 = new System.Windows.Forms.Label();
+            OrderButton = new System.Windows.Forms.Button();
+            TotalCostLabel = new System.Windows.Forms.Label();
+            MenuItem = new System.Windows.Forms.ListView();
+            NameColumn = new System.Windows.Forms.ColumnHeader();
+            DescriptionColumn = new System.Windows.Forms.ColumnHeader();
+            CostColumn = new System.Windows.Forms.ColumnHeader();
+            AmountColumn = new System.Windows.Forms.ColumnHeader();
+            amtSelector = new System.Windows.Forms.NumericUpDown();
+            OrderList = new System.Windows.Forms.ListView();
+            NameColumn0 = new System.Windows.Forms.ColumnHeader();
+            AmountColumn0 = new System.Windows.Forms.ColumnHeader();
+            TotalColumn = new System.Windows.Forms.ColumnHeader();
+            ((System.ComponentModel.ISupportInitialize)amtSelector).BeginInit();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(597, 359);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Итоговая цена:";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(950, 423);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(90, 15);
+            label1.TabIndex = 1;
+            label1.Text = "Итоговая цена:";
             // 
             // OrderButton
             // 
-            this.OrderButton.Location = new System.Drawing.Point(576, 390);
-            this.OrderButton.Name = "OrderButton";
-            this.OrderButton.Size = new System.Drawing.Size(212, 42);
-            this.OrderButton.TabIndex = 2;
-            this.OrderButton.Text = "Подтвердить заказ";
-            this.OrderButton.UseVisualStyleBackColor = true;
-            this.OrderButton.Click += new System.EventHandler(this.OrderButton_Click);
+            OrderButton.Location = new System.Drawing.Point(950, 450);
+            OrderButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            OrderButton.Name = "OrderButton";
+            OrderButton.Size = new System.Drawing.Size(327, 48);
+            OrderButton.TabIndex = 2;
+            OrderButton.Text = "Подтвердить заказ";
+            OrderButton.UseVisualStyleBackColor = true;
+            OrderButton.Click += OrderButton_Click;
             // 
             // TotalCostLabel
             // 
-            this.TotalCostLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.TotalCostLabel.AutoSize = true;
-            this.TotalCostLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.TotalCostLabel.Location = new System.Drawing.Point(688, 354);
-            this.TotalCostLabel.MinimumSize = new System.Drawing.Size(100, 0);
-            this.TotalCostLabel.Name = "TotalCostLabel";
-            this.TotalCostLabel.Size = new System.Drawing.Size(100, 20);
-            this.TotalCostLabel.TabIndex = 3;
-            this.TotalCostLabel.Text = "0,0";
-            this.TotalCostLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            TotalCostLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            TotalCostLabel.AutoSize = true;
+            TotalCostLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
+            TotalCostLabel.Location = new System.Drawing.Point(1160, 418);
+            TotalCostLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            TotalCostLabel.MinimumSize = new System.Drawing.Size(117, 0);
+            TotalCostLabel.Name = "TotalCostLabel";
+            TotalCostLabel.Size = new System.Drawing.Size(117, 20);
+            TotalCostLabel.TabIndex = 3;
+            TotalCostLabel.Text = "0,0";
+            TotalCostLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label2
+            // MenuItem
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(588, 13);
-            this.label2.MinimumSize = new System.Drawing.Size(200, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(200, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Итого:";
+            MenuItem.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { NameColumn, DescriptionColumn, CostColumn, AmountColumn });
+            MenuItem.FullRowSelect = true;
+            MenuItem.GridLines = true;
+            MenuItem.Location = new System.Drawing.Point(12, 12);
+            MenuItem.MultiSelect = false;
+            MenuItem.Name = "MenuItem";
+            MenuItem.Size = new System.Drawing.Size(931, 486);
+            MenuItem.TabIndex = 5;
+            MenuItem.UseCompatibleStateImageBehavior = false;
+            MenuItem.View = System.Windows.Forms.View.Details;
+            MenuItem.SelectedIndexChanged += MenuItem_SelectedIndexChanged;
+            // 
+            // NameColumn
+            // 
+            NameColumn.Text = "Блюдо";
+            NameColumn.Width = 250;
+            // 
+            // DescriptionColumn
+            // 
+            DescriptionColumn.Text = "Описание";
+            DescriptionColumn.Width = 530;
+            // 
+            // CostColumn
+            // 
+            CostColumn.Text = "Цена";
+            CostColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            CostColumn.Width = 75;
+            // 
+            // AmountColumn
+            // 
+            AmountColumn.Text = "Кол-во";
+            AmountColumn.Width = 74;
+            // 
+            // amtSelector
+            // 
+            amtSelector.Location = new System.Drawing.Point(869, 54);
+            amtSelector.Maximum = new decimal(new int[] { 25, 0, 0, 0 });
+            amtSelector.Name = "amtSelector";
+            amtSelector.Size = new System.Drawing.Size(75, 23);
+            amtSelector.TabIndex = 6;
+            amtSelector.Visible = false;
+            amtSelector.ValueChanged += amtSelector_ValueChanged;
+            // 
+            // OrderList
+            // 
+            OrderList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { NameColumn0, AmountColumn0, TotalColumn });
+            OrderList.FullRowSelect = true;
+            OrderList.GridLines = true;
+            OrderList.Location = new System.Drawing.Point(950, 12);
+            OrderList.MultiSelect = false;
+            OrderList.Name = "OrderList";
+            OrderList.Size = new System.Drawing.Size(328, 399);
+            OrderList.TabIndex = 7;
+            OrderList.UseCompatibleStateImageBehavior = false;
+            OrderList.View = System.Windows.Forms.View.Details;
+            // 
+            // NameColumn0
+            // 
+            NameColumn0.Text = "Блюдо";
+            NameColumn0.Width = 175;
+            // 
+            // AmountColumn0
+            // 
+            AmountColumn0.Text = "Кол-во";
+            AmountColumn0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            AmountColumn0.Width = 75;
+            // 
+            // TotalColumn
+            // 
+            TotalColumn.Text = "Сумма";
+            TotalColumn.Width = 74;
             // 
             // GuestForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.TotalCostLabel);
-            this.Controls.Add(this.OrderButton);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.MenuItems);
-            this.Name = "GuestForm";
-            this.Text = "Трататуй - Меню";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1290, 510);
+            Controls.Add(OrderList);
+            Controls.Add(amtSelector);
+            Controls.Add(MenuItem);
+            Controls.Add(TotalCostLabel);
+            Controls.Add(OrderButton);
+            Controls.Add(label1);
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "GuestForm";
+            Text = "Трататуй - Меню";
+            Load += GuestForm_Load;
+            ((System.ComponentModel.ISupportInitialize)amtSelector).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox MenuItems;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button OrderButton;
         private System.Windows.Forms.Label TotalCostLabel;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ListView MenuItem;
+        private System.Windows.Forms.ColumnHeader NameColumn;
+        private System.Windows.Forms.ColumnHeader DescriptionColumn;
+        private System.Windows.Forms.ColumnHeader CostColumn;
+        private System.Windows.Forms.ColumnHeader AmountColumn;
+        private System.Windows.Forms.NumericUpDown amtSelector;
+        private System.Windows.Forms.ListView OrderList;
+        private System.Windows.Forms.ColumnHeader NameColumn0;
+        private System.Windows.Forms.ColumnHeader AmountColumn0;
+        private System.Windows.Forms.ColumnHeader TotalColumn;
     }
 }
