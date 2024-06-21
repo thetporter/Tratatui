@@ -33,7 +33,7 @@ namespace Tratatui
             label1 = new System.Windows.Forms.Label();
             StaffCodeField = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
-            textBox1 = new System.Windows.Forms.TextBox();
+            PasswordField = new System.Windows.Forms.TextBox();
             LoginAsStaff = new System.Windows.Forms.Button();
             label3 = new System.Windows.Forms.Label();
             SuspendLayout();
@@ -78,13 +78,14 @@ namespace Tratatui
             label2.TabIndex = 3;
             label2.Text = "Код сотрудника";
             // 
-            // textBox1
+            // PasswordField
             // 
-            textBox1.Location = new System.Drawing.Point(122, 98);
-            textBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new System.Drawing.Size(352, 23);
-            textBox1.TabIndex = 4;
+            PasswordField.Location = new System.Drawing.Point(122, 98);
+            PasswordField.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            PasswordField.Name = "PasswordField";
+            PasswordField.Size = new System.Drawing.Size(352, 23);
+            PasswordField.TabIndex = 4;
+            PasswordField.UseSystemPasswordChar = true;
             // 
             // LoginAsStaff
             // 
@@ -114,7 +115,7 @@ namespace Tratatui
             ClientSize = new System.Drawing.Size(489, 171);
             Controls.Add(label3);
             Controls.Add(LoginAsStaff);
-            Controls.Add(textBox1);
+            Controls.Add(PasswordField);
             Controls.Add(label2);
             Controls.Add(StaffCodeField);
             Controls.Add(label1);
@@ -133,7 +134,7 @@ namespace Tratatui
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox StaffCodeField;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox PasswordField;
         private System.Windows.Forms.Button LoginAsStaff;
         private System.Windows.Forms.Label label3;
     }

@@ -205,6 +205,7 @@
             // 
             OrderList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4, columnHeader5 });
             OrderList.Location = new System.Drawing.Point(14, 493);
+            OrderList.MultiSelect = false;
             OrderList.Name = "OrderList";
             OrderList.Size = new System.Drawing.Size(310, 324);
             OrderList.TabIndex = 16;
@@ -239,6 +240,7 @@
             // EditedListView
             // 
             EditedListView.Location = new System.Drawing.Point(341, 87);
+            EditedListView.MultiSelect = false;
             EditedListView.Name = "EditedListView";
             EditedListView.Size = new System.Drawing.Size(771, 666);
             EditedListView.TabIndex = 17;

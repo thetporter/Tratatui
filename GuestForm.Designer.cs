@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace Tratatui
 {
     partial class GuestForm
@@ -33,6 +35,12 @@ namespace Tratatui
             OrderButton = new System.Windows.Forms.Button();
             TotalCostLabel = new System.Windows.Forms.Label();
             MenuItem = new System.Windows.Forms.ListView();
+            System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Салаты и закуски", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("Главные блюда", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Гарнир", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Десерты", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Напитки", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup21 = new System.Windows.Forms.ListViewGroup("Прочее", System.Windows.Forms.HorizontalAlignment.Left);
             NameColumn = new System.Windows.Forms.ColumnHeader();
             DescriptionColumn = new System.Windows.Forms.ColumnHeader();
             CostColumn = new System.Windows.Forms.ColumnHeader();
@@ -83,6 +91,19 @@ namespace Tratatui
             // MenuItem
             // 
             MenuItem.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { NameColumn, DescriptionColumn, CostColumn, AmountColumn });
+            listViewGroup16.Header = "Салаты и закуски";
+            listViewGroup16.Name = "DishGroup1";
+            listViewGroup17.Header = "Главные блюда";
+            listViewGroup17.Name = "DishGroup2";
+            listViewGroup18.Header = "Гарнир";
+            listViewGroup18.Name = "DishGroup3";
+            listViewGroup19.Header = "Десерты";
+            listViewGroup19.Name = "DishGroup4";
+            listViewGroup20.Header = "Напитки";
+            listViewGroup20.Name = "DishGroup5";
+            listViewGroup21.Header = "Прочее";
+            listViewGroup21.Name = "DishGroup6";
+            MenuItem.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] { listViewGroup16, listViewGroup17, listViewGroup18, listViewGroup19, listViewGroup20 });
             MenuItem.FullRowSelect = true;
             MenuItem.GridLines = true;
             MenuItem.Location = new System.Drawing.Point(12, 12);
