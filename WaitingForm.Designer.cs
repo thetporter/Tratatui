@@ -139,6 +139,7 @@
             Controls.Add(label1);
             Name = "WaitingForm";
             Text = "WaitingForm";
+            Load += WaitingForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -150,9 +151,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label WaiterLabel;
         private System.Windows.Forms.Label StateLabel;
-        private System.Windows.Forms.Label NumberLabel;
         private System.Windows.Forms.Button EditOrderButton;
         private System.Windows.Forms.Button CancelOrderButton;
         private System.Windows.Forms.Button CallWaiterButton;
+        public System.Windows.Forms.Label NumberLabel;
     }
 }

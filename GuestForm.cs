@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,6 +20,7 @@ namespace Tratatui
         }
 
         public List<Dish> Menu = new List<Dish>();
+        public Table table;
 
         private void OrderButton_Click(object sender, EventArgs e)
         {
@@ -41,15 +44,28 @@ namespace Tratatui
                 } else link.Amount = int.Parse(item.SubItems[1].Text);
 
                 DB.Database.SaveChanges();
+                DB.UpdateAll();
             }
             WaitingForm wait = new WaitingForm();
             wait.guestForm = this;
+            wait.NumberLabel.Text = order.Id.ToString();
             wait.Show();
             this.Enabled = false;
         }
 
         private void GuestForm_Load(object sender, EventArgs e)
         {
+            //Определение столика
+            List<Table> avail = DB.Database.Tables.ToList().FindAll(t => { return t.State == TableState.Free; });
+            if (avail.Count == 0)
+            { 
+                this.Enabled = false;
+                MessageBox.Show("Все столики сейчас заняты. Администрация ресторана приносит свои извинения за причиненные неудобства.");
+                this.Close();
+            }
+            table = DB.Database.Tables.Find(avail[RandomNumberGenerator.GetInt32(0, avail.Count)].Id);
+
+            //Заполнение меню
             foreach (Dish d in DB.Database.Dishes)
             {
                 Menu.Add(d);

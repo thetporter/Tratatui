@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +14,7 @@ namespace Tratatui
     public partial class WaitingForm : Form, IUpdateable
     {
         public GuestForm guestForm;
+        public Order awaitedorder;
 
         public WaitingForm()
         {
@@ -21,26 +23,47 @@ namespace Tratatui
 
         private void EditOrderButton_Click(object sender, EventArgs e)
         {
+            awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
+            DB.Database.Orders.Remove(awaitedorder);
+            DB.Database.SaveChanges();
+            DB.UpdateAll();
             guestForm.Enabled = true;
             this.Close();
         }
 
         private void CancelOrderButton_Click(object sender, EventArgs e)
         {
-            //Найти и удалить заказ в БД
+            awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
+            DB.Database.Orders.Remove(awaitedorder);
+            DB.Database.SaveChanges();
+            DB.UpdateAll();
             this.Close();
             guestForm.Close();
         }
 
         private void CallWaiterButton_Click(object sender, EventArgs e)
         {
-            //Создать заказ на вызов официанта в БД
-            (sender as Control).Enabled = false;
+            Order order = new Order();
+            order.Status = 0;
+            order.Active = true;
+            order.Type = OrderType.Request;
+            order.Table = guestForm.table;
+            guestForm.Enabled = false;
         }
 
         public void UpdateInfo()
         {
+            awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
+            this.NumberLabel.Text = awaitedorder.Id.ToString();
+            this.StateLabel.Text = StatusConverter.Do(awaitedorder.Status);
+            this.WaiterLabel.Text = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); }).Name;
+        }
 
+        private void WaitingForm_Load(object sender, EventArgs e)
+        {
+            this.NumberLabel.Text = awaitedorder.Id.ToString();
+            this.StateLabel.Text = StatusConverter.Do(awaitedorder.Status);
+            this.WaiterLabel.Text = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); }).Name;
         }
     }
 }
