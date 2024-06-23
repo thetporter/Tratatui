@@ -100,6 +100,13 @@ namespace Tratatui
         public ICollection<Order> InOrders { get; set; }
     }
 
+    public class DishorderLink
+    {
+        public int DishId { get; set; }
+        public int OrderId { get; set; }
+        public int Amount { get; set; }
+    }
+
     public class TratatuiContext : DbContext
     {
         public TratatuiContext(DbContextOptions<TratatuiContext> options) : base(options)
@@ -109,6 +116,17 @@ namespace Tratatui
         public DbSet<Table> Tables { get; set; }
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<Staff> Staff {  get; set; }
+        public DbSet<DishorderLink> DishOrder {  get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>()
+                .HasMany(e => e.Dishes)
+                .WithMany(e => e.InOrders)
+                .UsingEntity<DishorderLink>();
+            modelBuilder.Entity<DishorderLink>()
+                .HasKey(e => new { e.OrderId, e.DishId });
+        }
     }
 
     public static class DB {

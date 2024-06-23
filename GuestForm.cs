@@ -17,9 +17,31 @@ namespace Tratatui
             InitializeComponent();
         }
 
+        public List<Dish> Menu = new List<Dish>();
+
         private void OrderButton_Click(object sender, EventArgs e)
         {
-            //Создать в БД заказ с выбранными блюдами
+            Order order = new Order();
+            order.Status = 0;
+            order.Type = OrderType.Order;
+            order.CreationTime = TimeOnly.Parse(DateTime.Now.TimeOfDay.ToString());
+            foreach (ListViewItem item in OrderList.Items)
+            {
+                Dish dish = Menu.Find(d => {  return d.Name == item.Text; });
+                order.Dishes.Add(dish);
+
+                DishorderLink link = DB.Database.DishOrder.Find(order.Id, dish.Id);
+                if (link == null)
+                {
+                    link = new DishorderLink();
+                    link.DishId = dish.Id;
+                    link.OrderId = order.Id;
+                }
+                link.Amount = int.Parse(item.SubItems[1].Text);
+                
+
+                DB.Database.DishOrder.Add(link);
+            }
             WaitingForm wait = new WaitingForm();
             wait.guestForm = this;
             wait.Show();
@@ -28,14 +50,38 @@ namespace Tratatui
 
         private void GuestForm_Load(object sender, EventArgs e)
         {
-            //Последовательно загрузить из БД блюда по типам и положить их в ListView с кол-вом 0
-            ListViewGroup appetisers = new ListViewGroup("Салаты и закуски");
-            ListViewItem appetiser = new ListViewItem("Салат Цезарь", appetisers);
-            appetiser.SubItems.Add("Классический салат Цезарь с курицей.");
-            appetiser.SubItems.Add("$69,99");
-            appetiser.SubItems.Add("0");
-            MenuItem.Groups.Add(appetisers);
-            MenuItem.Items.Add(appetiser);
+            foreach (Dish d in DB.Database.Dishes)
+            {
+                Menu.Add(d);
+
+                ListViewItem dish = new ListViewItem([d.Name,
+                                                      d.Description,
+                                                      $"${d.Price.ToString()}"],
+                                                      "0");
+                ListViewGroup group;
+                switch (d.Type)
+                {
+                    case DishType.Appetiser:
+                        group = MenuItem.Groups[0];
+                        break;
+                    case DishType.MainDish:
+                        group = MenuItem.Groups[1];
+                        break;
+                    case DishType.SideDish:
+                        group = MenuItem.Groups[2];
+                        break;
+                    case DishType.Dessert:
+                        group = MenuItem.Groups[3];
+                        break;
+                    case DishType.Drink:
+                        group = MenuItem.Groups[4];
+                        break;
+                    default:
+                        group = MenuItem.Groups[5];
+                        break;
+                }
+                MenuItem.Items.Add(dish);
+            }
         }
 
         private void MenuItem_SelectedIndexChanged(object sender, EventArgs e)
