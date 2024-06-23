@@ -11,7 +11,7 @@ using Tratatui;
 
 namespace Tratatui
 {
-    public partial class RecipesForm : Form
+    public partial class RecipesForm : Form, IUpdateable
     {
         public int StoredId;
         public IEditingState state;
@@ -77,7 +77,7 @@ namespace Tratatui
             }
         }
 
-        public void UpdateLists()
+        public void UpdateInfo()
         {
             if (state is InactiveState)
             {
@@ -221,7 +221,7 @@ namespace Tratatui
 
             target.RecipeBox.Visible = true;
 
-            target.UpdateLists();
+            target.UpdateInfo();
         }
 
         public void ConfirmFunction()
@@ -379,7 +379,7 @@ namespace Tratatui
             target.listView1.Columns.Add("Имя");
             target.listView1.Columns.Add("Должность");
 
-            target.UpdateLists();
+            target.UpdateInfo();
         }
 
         public void ConfirmFunction()

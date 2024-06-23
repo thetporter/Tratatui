@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Tratatui
 {
-    public partial class WaitingForm : Form
+    public partial class WaitingForm : Form, IUpdateable
     {
         public GuestForm guestForm;
 
@@ -38,5 +38,9 @@ namespace Tratatui
             (sender as Control).Enabled = false;
         }
 
+        public void UpdateInfo()
+        {
+
+        }
     }
 }

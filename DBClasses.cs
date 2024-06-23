@@ -129,7 +129,7 @@ namespace Tratatui
         }
     }
 
-    public static class DB {
+    public static partial class DB {
         public static TratatuiContext Database = new TratatuiContext(
                 new DbContextOptionsBuilder<TratatuiContext>()
                     .UseSqlite("Filename=./Tratatui.db")

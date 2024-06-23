@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Tratatui
 {
-    public partial class StaffForm : Form
+    public partial class StaffForm : Form, IUpdateable
     {
         public StaffForm(Staff staff)
         {

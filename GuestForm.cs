@@ -36,11 +36,11 @@ namespace Tratatui
                     link = new DishorderLink();
                     link.DishId = dish.Id;
                     link.OrderId = order.Id;
-                }
-                link.Amount = int.Parse(item.SubItems[1].Text);
-                
+                    link.Amount = int.Parse(item.SubItems[1].Text);
+                    DB.Database.DishOrder.Add(link);
+                } else link.Amount = int.Parse(item.SubItems[1].Text);
 
-                DB.Database.DishOrder.Add(link);
+                DB.Database.SaveChanges();
             }
             WaitingForm wait = new WaitingForm();
             wait.guestForm = this;

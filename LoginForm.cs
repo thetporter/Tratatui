@@ -64,11 +64,7 @@ namespace Tratatui
                     return;
                 }
 
-                StaffForm staff;
-                switch (user)
-                {
-
-                }
+                StaffForm staff = new StaffForm(user);
             }
             
         }
@@ -81,6 +77,29 @@ namespace Tratatui
                 {
                     case DialogResult.Yes: break;
                     default: { e.Cancel = true; break; }
+                }
+            }
+        }
+    }
+
+    public interface IUpdateable
+    {
+        public void UpdateInfo();
+    }
+
+    public static partial class DB
+    {
+        public static void UpdateAll()
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+                try
+                {
+                    (form as IUpdateable).UpdateInfo();  
+                }
+                catch (Exception)
+                {
+                    throw;
                 }
             }
         }
