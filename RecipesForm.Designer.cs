@@ -34,7 +34,6 @@
             System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Гарнир", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Десерты", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Напитки", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Прочее", System.Windows.Forms.HorizontalAlignment.Left);
             listView1 = new System.Windows.Forms.ListView();
             columnHeader1 = new System.Windows.Forms.ColumnHeader();
             columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -51,6 +50,7 @@
             ConfirmButton = new System.Windows.Forms.Button();
             PriceBox = new System.Windows.Forms.MaskedTextBox();
             label1 = new System.Windows.Forms.Label();
+            StaffTypeBox = new System.Windows.Forms.ComboBox();
             SuspendLayout();
             // 
             // listView1
@@ -66,8 +66,6 @@
             listViewGroup4.Name = "DishGroup4";
             listViewGroup5.Header = "Напитки";
             listViewGroup5.Name = "DishGroup5";
-            listViewGroup6.Header = "Прочее";
-            listViewGroup6.Name = "DishGroup6";
             listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] { listViewGroup1, listViewGroup2, listViewGroup3, listViewGroup4, listViewGroup5 });
             listView1.Location = new System.Drawing.Point(12, 49);
             listView1.Name = "listView1";
@@ -220,11 +218,23 @@
             label1.Text = "Цена:";
             label1.Visible = false;
             // 
+            // StaffTypeBox
+            // 
+            StaffTypeBox.DisplayMember = "StaffType";
+            StaffTypeBox.FormattingEnabled = true;
+            StaffTypeBox.Items.AddRange(new object[] { "Официант", "Повар", "Администратор" });
+            StaffTypeBox.Location = new System.Drawing.Point(379, 406);
+            StaffTypeBox.Name = "StaffTypeBox";
+            StaffTypeBox.Size = new System.Drawing.Size(268, 23);
+            StaffTypeBox.TabIndex = 13;
+            StaffTypeBox.Visible = false;
+            // 
             // RecipesForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(800, 450);
+            Controls.Add(StaffTypeBox);
             Controls.Add(label1);
             Controls.Add(PriceBox);
             Controls.Add(ConfirmButton);
@@ -239,7 +249,7 @@
             Controls.Add(DishName);
             Controls.Add(listView1);
             Name = "RecipesForm";
-            Text = "RecipesForm";
+            Text = "StaffListForm";
             ResumeLayout(false);
             PerformLayout();
         }
@@ -261,5 +271,6 @@
         public System.Windows.Forms.Button ConfirmButton;
         public System.Windows.Forms.MaskedTextBox PriceBox;
         public System.Windows.Forms.Label label1;
+        public System.Windows.Forms.ComboBox StaffTypeBox;
     }
 }
