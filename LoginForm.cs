@@ -65,6 +65,7 @@ namespace Tratatui
                 }
 
                 StaffForm staff = new StaffForm(user);
+                staff.Show();
             }
             
         }

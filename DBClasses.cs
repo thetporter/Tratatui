@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
+using System.Windows.Forms;
+using System.Linq.Expressions;
 
 namespace Tratatui
 {
@@ -91,6 +93,17 @@ namespace Tratatui
 
     public class Dish
     {
+        public Dish() { }
+        public Dish(int Id, DishType Type, string Name, string Description, string Recipe, decimal Price, bool commit)
+        {
+            this.Id = Id;
+            this.Type = Type;
+            this.Name = Name;
+            this.Description = Description; 
+            this.Recipe = Recipe;
+            this.Price = Price;
+            if (commit) DB.Database.Dishes.Add(this);
+        }
         public int Id { get; set; }
         public DishType Type { get; set; }
         public string Name {  get; set; }
@@ -130,10 +143,60 @@ namespace Tratatui
     }
 
     public static partial class DB {
-        public static TratatuiContext Database = new TratatuiContext(
+        public static readonly TratatuiContext Database = new TratatuiContext(
                 new DbContextOptionsBuilder<TratatuiContext>()
-                    .UseSqlite("Filename=./Tratatui.db")
+                    .UseSqlite("Filename=../../../Tratatui.db")
                     .Options);
+
+        public static void InitializeDB ()
+        {
+            //Пользователь с правами доступа администратора, кодом 1 и паролем admin
+            if (DB.Database.Staff.Find(1) != null) return;
+            Staff admin = new Staff();
+            admin.Name = "admin";
+            admin.Id = 1;
+            admin.PasswordHash = Encrypter.Encrypt("admin", null);
+            admin.Type = StaffType.Admin;
+            DB.Database.Add(admin);
+            DB.Database.SaveChanges();
+
+            //Столы
+            if (DB.Database.Tables.Count() != 16)
+            {
+                DB.Database.Tables.RemoveRange(from table in DB.Database.Tables select table);
+                for (int i = 0; i < 16; i++)
+                {
+                    Table table = new Table();
+                    table.Id = i + 1;
+                    table.State = TableState.Free;
+                    DB.Database.Tables.Add(table);
+                }
+                DB.Database.SaveChanges();
+            }
+
+            //Стандартные блюда
+            if (DB.Database.Dishes.Count() < 6)
+            {
+                if (DB.Database.Dishes.Find(1) == null)
+                    new Dish(1, DishType.Appetiser, "Салат Цезарь", "Легкий классический салат с курицей",
+                    "Взять все, что есть в холодильнике (кроме котлет), скидать вместе и перемешать", (decimal)19.99, true);
+                if (DB.Database.Dishes.Find(2) == null)
+                    new Dish(2, DishType.MainDish, "Котлета от шеф-повара", "Большая, сочная котлета из говядины",
+                    "Достать из холодильника, разогреть на сковородке", (decimal)24.99, true);
+                if (DB.Database.Dishes.Find(3) == null)
+                    new Dish(3, DishType.SideDish, "Отварной картофель", "Молодая картошечка, сваренная со специями и подающаяся с зеленью",
+                    "Берем картоху, варим с солью, посыпаем укропчиком, подаем", (decimal)17.99, true);
+                if (DB.Database.Dishes.Find(4) == null)
+                    new Dish(4, DishType.Dessert, "Мороженое", "Шарик пломбира с шариком шоколадного мороженого, политые шоколадом",
+                    "Достать мороженое из морозилки, сделать шарик того, шарик другого, побрызгать соусом", (decimal)19.99, true);
+                if (DB.Database.Dishes.Find(5) == null)
+                    new Dish(5, DishType.Drink, "Яблочный сок", "Свежий сок из отборных яблок",
+                    "Налить Доброго в стакан", (decimal)9.99, true);
+                if (DB.Database.Dishes.Find(6) == null)
+                    new Dish(6, DishType.Other, "Хлеб (3 ломтика)", "Мягкий, свежий хлеб",
+                    "Отрезать два куска хлеба, разрезать напополам, один оставить, подавать в хлебнице", (decimal)1.99, true);
+            }
+        }
     }
 }
 

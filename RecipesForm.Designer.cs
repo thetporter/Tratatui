@@ -48,9 +48,10 @@
             DescTextbox = new System.Windows.Forms.TextBox();
             RecipeTextbox = new System.Windows.Forms.TextBox();
             ConfirmButton = new System.Windows.Forms.Button();
-            PriceBox = new System.Windows.Forms.MaskedTextBox();
             label1 = new System.Windows.Forms.Label();
-            StaffTypeBox = new System.Windows.Forms.ComboBox();
+            TypeBox = new System.Windows.Forms.ComboBox();
+            PriceBox = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)PriceBox).BeginInit();
             SuspendLayout();
             // 
             // listView1
@@ -178,12 +179,12 @@
             // 
             RecipeTextbox.AcceptsReturn = true;
             RecipeTextbox.Location = new System.Drawing.Point(335, 102);
-            RecipeTextbox.MaximumSize = new System.Drawing.Size(453, 289);
-            RecipeTextbox.MinimumSize = new System.Drawing.Size(453, 289);
+            RecipeTextbox.MaximumSize = new System.Drawing.Size(453, 249);
+            RecipeTextbox.MinimumSize = new System.Drawing.Size(453, 249);
             RecipeTextbox.Multiline = true;
             RecipeTextbox.Name = "RecipeTextbox";
             RecipeTextbox.PlaceholderText = "Рецепт";
-            RecipeTextbox.Size = new System.Drawing.Size(453, 289);
+            RecipeTextbox.Size = new System.Drawing.Size(453, 249);
             RecipeTextbox.TabIndex = 9;
             RecipeTextbox.Visible = false;
             // 
@@ -198,16 +199,6 @@
             ConfirmButton.Visible = false;
             ConfirmButton.Click += ConfirmButton_Click;
             // 
-            // PriceBox
-            // 
-            PriceBox.Location = new System.Drawing.Point(379, 406);
-            PriceBox.Mask = "1111,11";
-            PriceBox.Name = "PriceBox";
-            PriceBox.Size = new System.Drawing.Size(268, 23);
-            PriceBox.TabIndex = 11;
-            PriceBox.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePrompt;
-            PriceBox.Visible = false;
-            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -218,25 +209,34 @@
             label1.Text = "Цена:";
             label1.Visible = false;
             // 
-            // StaffTypeBox
+            // TypeBox
             // 
-            StaffTypeBox.DisplayMember = "StaffType";
-            StaffTypeBox.FormattingEnabled = true;
-            StaffTypeBox.Items.AddRange(new object[] { "Официант", "Повар", "Администратор" });
-            StaffTypeBox.Location = new System.Drawing.Point(379, 406);
-            StaffTypeBox.Name = "StaffTypeBox";
-            StaffTypeBox.Size = new System.Drawing.Size(268, 23);
-            StaffTypeBox.TabIndex = 13;
-            StaffTypeBox.Visible = false;
+            TypeBox.DisplayMember = "StaffType";
+            TypeBox.FormattingEnabled = true;
+            TypeBox.Items.AddRange(new object[] { "Официант", "Повар", "Администратор" });
+            TypeBox.Location = new System.Drawing.Point(335, 368);
+            TypeBox.Name = "TypeBox";
+            TypeBox.Size = new System.Drawing.Size(453, 23);
+            TypeBox.TabIndex = 13;
+            TypeBox.Visible = false;
+            // 
+            // PriceBox
+            // 
+            PriceBox.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            PriceBox.Location = new System.Drawing.Point(379, 407);
+            PriceBox.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            PriceBox.Name = "PriceBox";
+            PriceBox.Size = new System.Drawing.Size(268, 23);
+            PriceBox.TabIndex = 14;
             // 
             // RecipesForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(800, 450);
-            Controls.Add(StaffTypeBox);
-            Controls.Add(label1);
             Controls.Add(PriceBox);
+            Controls.Add(TypeBox);
+            Controls.Add(label1);
             Controls.Add(ConfirmButton);
             Controls.Add(RecipeTextbox);
             Controls.Add(DescTextbox);
@@ -249,7 +249,8 @@
             Controls.Add(DishName);
             Controls.Add(listView1);
             Name = "RecipesForm";
-            Text = "StaffListForm";
+            Text = "Книга рецептов";
+            ((System.ComponentModel.ISupportInitialize)PriceBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -269,8 +270,8 @@
         public System.Windows.Forms.TextBox DescTextbox;
         public System.Windows.Forms.TextBox RecipeTextbox;
         public System.Windows.Forms.Button ConfirmButton;
-        public System.Windows.Forms.MaskedTextBox PriceBox;
         public System.Windows.Forms.Label label1;
-        public System.Windows.Forms.ComboBox StaffTypeBox;
+        public System.Windows.Forms.ComboBox TypeBox;
+        public System.Windows.Forms.NumericUpDown PriceBox;
     }
 }

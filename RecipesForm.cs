@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -32,11 +33,13 @@ namespace Tratatui
             if (state is InactiveState)
             {
                 state = new AddState();
+                state.target = this;
                 state.Invoke();
             }
             else if (state is AdminInactiveState)
             {
                 state = new AdminAddState();
+                state.target = this;
                 state.Invoke();
             }
             
@@ -47,11 +50,13 @@ namespace Tratatui
             if (state is InactiveState)
             {
                 state = new EditState();
+                state.target = this;
                 state.Invoke();
             }
             else if (state is AdminInactiveState)
             {
                 state = new AdminEditState();
+                state.target = this;
                 state.Invoke();
             }
         }
@@ -64,7 +69,8 @@ namespace Tratatui
                     "Подтвердить удаление", MessageBoxButtons.YesNo)
                     == DialogResult.Yes)
                 {
-                    //Удалить блюдо из БД
+                    DB.Database.Dishes.Remove(DB.Database.Dishes.Find(DB.Database.Dishes.ToList()
+                        .Find(d => { return d.Name == listView1.SelectedItems[0].Text; }).Id));
                 }
             } else if (state is AdminInactiveState)
             {
@@ -72,7 +78,12 @@ namespace Tratatui
                     "Подтвердить удаление", MessageBoxButtons.YesNo)
                     == DialogResult.Yes)
                 {
-                    //Удалить запись сотрудника из БД
+                    if (listView1.SelectedItems[0].Text == "1")
+                    {
+                        MessageBox.Show("Невозможно удалить запись 1.");
+                        return;
+                    }
+                    DB.Database.Staff.Remove(DB.Database.Staff.Find(listView1.SelectedItems[0].Text));
                 }
             }
         }
@@ -81,10 +92,41 @@ namespace Tratatui
         {
             if (state is InactiveState)
             {
-                //Запросить список блюд из БД
+                foreach (Dish d in DB.Database.Dishes)
+                {
+                    ListViewItem entry = new ListViewItem([d.Name, d.Price.ToString()]);
+                    ListViewGroup group;
+                    switch (d.Type)
+                    {
+                        case DishType.Appetiser:
+                            group = listView1.Groups[0];
+                            break;
+                        case DishType.MainDish:
+                            group = listView1.Groups[1];
+                            break;
+                        case DishType.SideDish:
+                            group = listView1.Groups[2];
+                            break;
+                        case DishType.Dessert:
+                            group = listView1.Groups[3];
+                            break;
+                        case DishType.Drink:
+                            group = listView1.Groups[4];
+                            break;
+                        default:
+                            group = listView1.Groups[5];
+                            break;
+                    }
+                    group.Items.Add(entry);
+                    listView1.Items.Add(entry);
+                }
             } else if (state is AdminInactiveState)
             {
-                //Запросить список сотрудников из БД
+                foreach (Staff s in DB.Database.Staff)
+                {
+                    ListViewItem entry = new ListViewItem([s.Id.ToString(), s.Name, StaffTypeConverter.TypeToString(s.Type)]);
+                    listView1.Items.Add(entry);
+                }
             }
         }
 
@@ -131,6 +173,9 @@ namespace Tratatui
             target.DescTextbox.Text = String.Empty;
             target.RecipeTextbox.Text = String.Empty;
             target.PriceBox.Text = String.Empty;
+
+            target.TypeBox.Items.Clear();
+            target.TypeBox.Items.AddRange(["Салаты и закуски", "Горячие блюда", "Гарниры", "Десерты", "Напитки", "Прочее"]);
         }
 
         public void ConfirmFunction()
@@ -139,8 +184,15 @@ namespace Tratatui
                 target.DescTextbox.Text.Trim().Length < 1 ||
                 target.RecipeTextbox.Text.Trim().Length < 1)
                 MessageBox.Show("Неверное заполнение информации о блюде! Блюдо должно иметь название, описание и рецепт.");
-            //Создание блюда в БД
+            
+            DB.Database.Database.ExecuteSql($"""
+                                               INSERT INTO Dishes (Name, Description, Price) 
+                                               VALUES
+                                                      ({target.NameTextbox.Text.Trim()}, {target.DescTextbox.Text},
+                                                      {target.PriceBox.Value}, {})
+                                               """);
             target.state = new InactiveState();
+            target.state.target = target;
             target.state.Invoke();
         }
 
@@ -154,6 +206,7 @@ namespace Tratatui
                 target.RecipeBox.Items.Add("Рецепт блюда");
             }
             target.state = new InactiveState();
+            target.state.target = target;
             target.state.Invoke();
         }
     }
@@ -192,6 +245,7 @@ namespace Tratatui
                 MessageBox.Show("Неверное заполнение информации о блюде! Блюдо должно иметь название, описание и рецепт.");
             //Изменение блюда в БД
             target.state = new InactiveState();
+            target.state.target = target;
             target.state.Invoke();
         }
 
@@ -199,6 +253,7 @@ namespace Tratatui
         {
             //Сброс режима
             target.state = new InactiveState();
+            target.state.target = target;
             target.state.Invoke();
         }
     }
@@ -271,7 +326,7 @@ namespace Tratatui
             target.RecipeTextbox.Visible = false;
             target.PriceBox.Visible = false;
             target.label1.Visible = false;
-            target.StaffTypeBox.Visible = true;
+            target.TypeBox.Visible = true;
 
             target.RecipeBox.Visible = false;
 
@@ -289,6 +344,7 @@ namespace Tratatui
                 MessageBox.Show("Неверное заполнение информации о сотруднике!");
             //Создание сотрудника в БД
             target.state = new InactiveState();
+            target.state.target = target;
             target.state.Invoke();
         }
 
@@ -302,6 +358,7 @@ namespace Tratatui
                 target.RecipeBox.Items.Add("Заказы, принятые и выполненные сотрудником");
             }
             target.state = new InactiveState();
+            target.state.target = target;
             target.state.Invoke();
         }
     }   
@@ -321,12 +378,12 @@ namespace Tratatui
             target.RecipeTextbox.Visible = false;
             target.PriceBox.Visible = false;
             target.label1.Visible = false;
-            target.StaffTypeBox.Visible = true;
+            target.TypeBox.Visible = true;
 
             target.RecipeBox.Visible = false;
 
             target.NameTextbox.Text = target.DishName.Text;
-            target.StaffTypeBox.SelectedIndex = StaffTypeConverter.StringToInt(target.listView1.SelectedItems[0].SubItems[2].Text);
+            target.TypeBox.SelectedIndex = StaffTypeConverter.StringToInt(target.listView1.SelectedItems[0].SubItems[2].Text);
         }
 
         public void ConfirmFunction()
@@ -335,6 +392,7 @@ namespace Tratatui
                 MessageBox.Show("Неверное заполнение информации! Сотрудник должен иметь имя.");
             //Изменение сотрудника в БД
             target.state = new AdminInactiveState();
+            target.state.target = target;
             target.state.Invoke();
         }
 
@@ -346,6 +404,7 @@ namespace Tratatui
             target.RecipeBox.Items.Clear();
             target.RecipeBox.Items.Add("Заказы, принятые и выполненные сотрудником");
             target.state = new AdminInactiveState();
+            target.state.target = target;
             target.state.Invoke();
         }
     }
@@ -365,7 +424,7 @@ namespace Tratatui
             target.RecipeTextbox.Visible = false;
             target.PriceBox.Visible = false;
             target.label1.Visible = false;
-            target.StaffTypeBox.Visible = false;
+            target.TypeBox.Visible = false;
 
             target.RecipeBox.Visible = true;
 

@@ -15,6 +15,8 @@ namespace Tratatui
         [STAThread]
         static void Main()
         {
+            DB.Database.Database.EnsureCreated();
+            DB.InitializeDB();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LoginForm());

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -314,7 +315,7 @@ namespace Tratatui
         {
             target.user.Orders.Add(DB.Database.Tables.ToList()
                                 .Find(tb => { return tb.Id == int.Parse((sender as Button).Text.Substring(7)); })
-                                .Orders.ToList().FindAll(or => { return or.Active; }).Last();
+                                .Orders.ToList().FindAll(or => { return or.Active; }).Last());
             UpdateThings();
         }
         public void OrderListSelectionChangeFunction(object sender, EventArgs e)
@@ -323,6 +324,21 @@ namespace Tratatui
 
             if (target.OrderList.SelectedItems.Count > 0)
             {
+                target.ActiveOrder = DB.Database.Orders.Find(int.Parse(target.OrderList.SelectedItems[0].Text));
+                foreach (Dish dish in target.ActiveOrder.Dishes)
+                {
+                    ListViewItem article = new ListViewItem();
+                    article.Text = dish.Name;
+                    article.SubItems.Add(DB.Database.DishOrder.ToList()
+                        .Find(dol => {
+                            return dol.OrderId == target.ActiveOrder.Id
+                                   && dol.DishId == dish.Id;
+                        }).Amount.ToString());
+                    article.SubItems.Add("$" +
+                        (int.Parse(article.SubItems[1].Text) * dish.Price).ToString()
+                        );
+                }
+
                 if (target.OrderList.SelectedItems[0].SubItems[3].Text == "")
                 {
                     target.button1.Text = "Взять заказ";
@@ -369,10 +385,8 @@ namespace Tratatui
             target.button2.Click += Button2Function;
             target.button2.Enabled = true;
 
-            target.OrderList.SelectedIndexChanged += OrderListSelectionChangeFunction;
-
-            foreach (Button btn in target.Controls)
-                if (btn.Text.StartsWith("Столик ")) btn.Click += TableButtonFunction;
+            foreach (Control btn in target.Controls)
+                if (btn.GetType() == typeof(Button) && btn.Text.StartsWith("Столик ")) btn.Click += TableButtonFunction;
 
             target.TopLabel.Text = """
                             
@@ -420,7 +434,7 @@ namespace Tratatui
             }
             foreach (Order ord in DB.Database.Orders)
             {
-                if (ord.Type != OrderType.Order || !ord.Active) continue;
+                if (!ord.Active) continue;
 
                 string staffonorder = "";
                 foreach (Staff st in DB.Database.Staff)
@@ -440,48 +454,30 @@ namespace Tratatui
         }
         public void Button1Function(object sender, EventArgs e)
         {
-            //Установить официанта для заказа в БД либо снять официанта с заказа в БД
-            UpdateThings();
+            RecipesForm f = new RecipesForm();
+            f.state = new InactiveState();
+            f.Show();
         }
         public void Button2Function(object sender, EventArgs e)
         {
-            //Удалить заказ/отметить как выполненный
-            UpdateThings();
+            RecipesForm f = new RecipesForm();
+            f.state = new AdminInactiveState();
+            f.Show();
         }
         public void TableButtonFunction(object sender, EventArgs e)
         {
-            //Установить официанта для заказа в БД
-            UpdateThings();
+            foreach (ListViewItem item in target.OrderList.Items.Find((sender as Button).Text.Substring(7), true))
+            {
+                if (item.SubItems[1].Text == ((sender as Button).Text.Substring(7)))
+                {
+                    item.Selected = true;
+                    break;
+                }
+            }
         }
         public void OrderListSelectionChangeFunction(object sender, EventArgs e)
         {
-            //Запросить информацию о стоимости заказа из БД и отобразить ее в EditedListView
-
-            if (target.OrderList.SelectedItems.Count > 0)
-            {
-                if (target.OrderList.SelectedItems[0].SubItems[3].Text == "")
-                {
-                    target.button1.Text = "Взять заказ";
-                    target.button1.Enabled = true;
-                }
-                else if (target.OrderList.SelectedItems[0].SubItems[3].Text == target.user.Id.ToString())
-                {
-                    target.button1.Text = "Отказаться от заказа";
-                    target.button1.Enabled = true;
-                }
-                else target.button1.Enabled = false;
-            }
-            else target.button1.Enabled = false;
-
-            decimal sum = 0;
-            foreach (ListViewItem it in target.EditedListView.Items)
-                sum += decimal.Parse(it.SubItems[2].Text.Substring(1));
-            if (sum > 0) target.TopLabel.Text = "Итоговая стоимость заказа: $" + sum.ToString();
-            else target.TopLabel.Text = """
-                        Синий столик требует уборки. Зеленые столики ожидают свои заказы. Красные столики подзывают официанта.
-                        Светлые цвета обозначают столики, принятые другими официантами. Нажмите на столик, чтобы принять на себя его обслуживание.
-                        Столики, обслуживаемые вами, имеют красную обводку.
-                        """;
+            //Игнорировать
         }
     }
 }

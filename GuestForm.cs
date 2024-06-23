@@ -56,12 +56,15 @@ namespace Tratatui
         private void GuestForm_Load(object sender, EventArgs e)
         {
             //Определение столика
-            List<Table> avail = DB.Database.Tables.ToList().FindAll(t => { return t.State == TableState.Free; });
+            List<Table> avail = new List<Table>();
+            foreach (Table t in DB.Database.Tables)
+                { if (t.State == TableState.Free) avail.Add(t); }
             if (avail.Count == 0)
             { 
                 this.Enabled = false;
                 MessageBox.Show("Все столики сейчас заняты. Администрация ресторана приносит свои извинения за причиненные неудобства.");
                 this.Close();
+                return;
             }
             table = DB.Database.Tables.Find(avail[RandomNumberGenerator.GetInt32(0, avail.Count)].Id);
 
@@ -96,6 +99,7 @@ namespace Tratatui
                         group = MenuItem.Groups[5];
                         break;
                 }
+                group.Items.Add(dish);
                 MenuItem.Items.Add(dish);
             }
         }
