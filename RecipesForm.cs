@@ -74,8 +74,9 @@ namespace Tratatui
                     "Подтвердить удаление", MessageBoxButtons.YesNo)
                     == DialogResult.Yes)
                 {
-                    DB.Database.Dishes.Remove(DB.Database.Dishes.Find(DB.Database.Dishes.ToList()
-                        .Find(d => { return d.Name == MainList.SelectedItems[0].Text; }).Id));
+                    DB.Database.Dishes.Remove(DB.Database.Dishes.Where(d => d.Name == MainList.SelectedItems[0].Text).First());
+                    DB.Database.SaveChanges();
+                    DB.UpdateAll();
                 }
             } else if (state is AdminInactiveState)
             {
@@ -187,6 +188,7 @@ namespace Tratatui
             target.RecipeTextbox.Text = String.Empty;
             target.PriceBox.Text = String.Empty;
 
+            target.TypeBox.Visible = true;
             target.TypeBox.Items.Clear();
             target.TypeBox.Items.AddRange(["Салаты и закуски", "Горячие блюда", "Гарниры", "Десерты", "Напитки", "Прочее"]);
         }
@@ -196,9 +198,45 @@ namespace Tratatui
             if (target.NameTextbox.Text.Trim().Length < 1 ||
                 target.DescTextbox.Text.Trim().Length < 1 ||
                 target.RecipeTextbox.Text.Trim().Length < 1 ||
-                target.)
-                MessageBox.Show("Неверное заполнение информации о блюде! Блюдо должно иметь название, описание и рецепт.");
+                target.TypeBox.Text == "")
+                { MessageBox.Show("Неверное заполнение информации о блюде! Блюдо должно иметь название, описание, рецепт и тип."); 
+                  return; }
             
+            if (DB.Database.Dishes.Where(d => d.Name == target.NameTextbox.Text.Trim()).Any())
+            {
+                MessageBox.Show("Это блюдо уже существует! Измените название.");
+                return;
+            }
+
+            Dish dish = new Dish();
+            dish.Name = target.NameTextbox.Text.Trim();
+            dish.Description = target.DescTextbox.Text.Trim();
+            dish.Recipe = target.RecipeTextbox.Text.Trim();
+            dish.Price = target.PriceBox.Value;
+            switch (target.TypeBox.SelectedIndex)
+            {
+                case 0:
+                    dish.Type = DishType.Appetiser;
+                    break;
+                case 1:
+                    dish.Type = DishType.MainDish;
+                    break;
+                case 2:
+                    dish.Type = DishType.SideDish;
+                    break;
+                case 3:
+                    dish.Type = DishType.Dessert;
+                    break;
+                case 4:
+                    dish.Type = DishType.Drink;
+                    break;
+                default:
+                    dish.Type = DishType.Other;
+                    break;
+            }
+            DB.Database.Dishes.Add(dish);
+            DB.Database.SaveChanges();
+
             target.state = new InactiveState();
             target.state.target = target;
             target.state.Invoke();
@@ -234,6 +272,7 @@ namespace Tratatui
             target.RecipeTextbox.Visible = true;
             target.PriceBox.Visible = true;
             target.label1.Visible = true;
+            target.TypeBox.Visible = true;
 
             target.RecipeBox.Visible = false;
 
@@ -242,16 +281,52 @@ namespace Tratatui
             string recipe = "";
             foreach (var item in target.RecipeBox.Items) recipe += item.ToString() + "\n";
             target.RecipeTextbox.Text = recipe;
-            target.PriceBox.Text = target.MainList.SelectedItems[0].SubItems[1].Text.Substring(1);
+            target.PriceBox.Value = decimal.Parse(target.MainList.SelectedItems[0].SubItems[1].Text);
+
+            target.TypeBox.Visible = true;
+            target.TypeBox.Items.Clear();
+            target.TypeBox.Items.AddRange(["Салаты и закуски", "Горячие блюда", "Гарниры", "Десерты", "Напитки", "Прочее"]);
+            target.TypeBox.SelectedIndex = target.MainList.Groups.IndexOf(target.MainList.SelectedItems[0].Group);
         }
 
         public void ConfirmFunction()
         {
             if (target.NameTextbox.Text.Trim().Length < 1 ||
                 target.DescTextbox.Text.Trim().Length < 1 ||
-                target.RecipeTextbox.Text.Trim().Length < 1)
-                MessageBox.Show("Неверное заполнение информации о блюде! Блюдо должно иметь название, описание и рецепт.");
-            //Изменение блюда в БД
+                target.RecipeTextbox.Text.Trim().Length < 1 ||
+                target.TypeBox.Text == "")
+            {
+                MessageBox.Show("Неверное заполнение информации о блюде! Блюдо должно иметь название, описание, рецепт и тип.");
+                return;
+            }
+
+            Dish dish = DB.Database.Dishes.Where(d => d.Name == target.MainList.SelectedItems[0].Text).First();
+            dish.Name = target.NameTextbox.Text.Trim();
+            dish.Description = target.DescTextbox.Text.Trim();
+            dish.Recipe = target.RecipeTextbox.Text.Trim();
+            dish.Price = target.PriceBox.Value;
+            switch (target.TypeBox.SelectedIndex)
+            {
+                case 0:
+                    dish.Type = DishType.Appetiser;
+                    break;
+                case 1:
+                    dish.Type = DishType.MainDish;
+                    break;
+                case 2:
+                    dish.Type = DishType.SideDish;
+                    break;
+                case 3:
+                    dish.Type = DishType.Dessert;
+                    break;
+                case 4:
+                    dish.Type = DishType.Drink;
+                    break;
+                default:
+                    dish.Type = DishType.Other;
+                    break;
+            }
+            DB.Database.SaveChanges();
             target.state = new InactiveState();
             target.state.target = target;
             target.state.Invoke();
@@ -259,7 +334,7 @@ namespace Tratatui
 
         public void IndexChangeFunction()
         {
-            //Сброс режима
+            //Сброс состояния
             target.state = new InactiveState();
             target.state.target = target;
             target.state.Invoke();
@@ -283,6 +358,13 @@ namespace Tratatui
             target.label1.Visible = false;
 
             target.RecipeBox.Visible = true;
+
+            target.TypeBox.Visible = false;
+
+            target.DishName.Text = "Название блюда";
+            target.DishDescription.Text = "Описание блюда";
+            target.RecipeBox.Items.Clear();
+            target.RecipeBox.Items.Add("Рецепт блюда");
 
             target.UpdateInfo();
         }

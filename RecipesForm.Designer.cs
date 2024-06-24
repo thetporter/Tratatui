@@ -229,6 +229,7 @@
             // 
             // PriceBox
             // 
+            PriceBox.DecimalPlaces = 2;
             PriceBox.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
             PriceBox.Location = new System.Drawing.Point(379, 407);
             PriceBox.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });

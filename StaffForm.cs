@@ -144,7 +144,7 @@ namespace Tratatui
                 staffonorder = staffonorder.TrimEnd([',', ' ']);
 
                 target.OrderList.Items.Add(new ListViewItem([ord.Id.ToString(),
-                                                           ord.Table.ToString(),
+                                                           ord.Table.Id.ToString(),
                                                            ord.CreationTime.ToString(),
                                                            staffonorder,
                                                            StatusConverter.Do(ord.Status)]));
@@ -177,11 +177,12 @@ namespace Tratatui
 
             if (target.OrderList.SelectedItems.Count == 1)
             {
-                if (target.OrderList.SelectedItems[0].SubItems[4].Text != "Сейчас принесем!")
-                    target.button1.Enabled = true;
-                else target.button1.Enabled = false;
+                
                 target.ActiveOrder = DB.Database.Orders.Include(o => o.Dishes).ToList()
                     .Find(o => { return o.Id == int.Parse(target.OrderList.SelectedItems[0].Text); });
+                if (target.ActiveOrder.Status < 4)
+                    target.button1.Enabled = true;
+                else target.button1.Enabled = false;
                 if (target.ActiveOrder.Dishes != null)
                 {
                     foreach (Dish di in target.ActiveOrder.Dishes)
@@ -249,6 +250,7 @@ namespace Tratatui
                 return;
             }
 
+            DB.Database.ChangeTracker.Clear();
             foreach (Table t in DB.Database.Tables)
             {
                 Button tbtn = target.Controls.OfType<Button>().ToList().Find(btn => { return btn.Text.EndsWith($" {t.Id.ToString()}"); });
@@ -315,7 +317,7 @@ namespace Tratatui
                 staffonorder = staffonorder.TrimEnd([',', ' ']);
 
                 target.OrderList.Items.Add(new ListViewItem([ord.Id.ToString(),
-                                                           ord.Table.ToString(),
+                                                           ord.Table.Id.ToString(),
                                                            ord.CreationTime.ToString(),
                                                            staffonorder,
                                                            StatusConverter.Do(ord.Status)]));
@@ -481,7 +483,7 @@ namespace Tratatui
 
 
                 target.OrderList.Items.Add(new ListViewItem([ord.Id.ToString(),
-                                                           ord.Table.ToString(),
+                                                           ord.Table.Id.ToString(),
                                                            ord.CreationTime.ToString(),
                                                            staffonorder,
                                                            StatusConverter.Do(ord.Status)]));
