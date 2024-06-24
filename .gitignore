@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Database is generated on startup
+Tratatui.db*
+/Tratatui.db
+/Tratatui.db-shm
+/Tratatui.db-wal
