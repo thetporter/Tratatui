@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,6 +26,7 @@ namespace Tratatui
         {
             awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
             DB.Database.Orders.Remove(awaitedorder);
+            DB.Database.Tables.Find(guestForm.table.Id).State = TableState.Ordering;
             DB.Database.SaveChanges();
             DB.UpdateAll();
             guestForm.Enabled = true;
@@ -35,6 +37,7 @@ namespace Tratatui
         {
             awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
             DB.Database.Orders.Remove(awaitedorder);
+            DB.Database.Tables.Find(guestForm.table.Id).State = TableState.Free;
             DB.Database.SaveChanges();
             DB.UpdateAll();
             this.Close();
@@ -48,13 +51,27 @@ namespace Tratatui
             order.Active = true;
             order.Type = OrderType.Request;
             order.Table = guestForm.table;
-            guestForm.Enabled = false;
+            order.CreationTime = TimeOnly.Parse(DateTime.Now.TimeOfDay.ToString());
+            DB.Database.Orders.Add(order);
+            DB.Database.Tables.Find(guestForm.table.Id).State = TableState.Calling;
+            DB.Database.SaveChanges();
+            DB.UpdateAll();
+            CallWaiterButton.Enabled = false;
         }
 
         public void UpdateInfo()
         {
             awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
             if (awaitedorder is null) return;
+            if (!awaitedorder.Active || DB.Database.Tables.Find(guestForm.table.Id).State == TableState.Served)
+            {
+                DB.Database.Tables.Find(guestForm.table.Id).State = TableState.Served;
+                DB.Database.SaveChanges();
+                FinishForm fin = new FinishForm(this.guestForm.table);
+                fin.Show();
+                this.guestForm.Close();
+                this.Close();
+            }
             this.NumberLabel.Text = awaitedorder.Id.ToString();
             this.StateLabel.Text = StatusConverter.Do(awaitedorder.Status);
             Staff temp = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); });

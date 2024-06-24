@@ -241,12 +241,13 @@
             // EditedListView
             // 
             EditedListView.FullRowSelect = true;
-            EditedListView.Location = new System.Drawing.Point(341, 87);
+            EditedListView.Location = new System.Drawing.Point(339, 87);
             EditedListView.MultiSelect = false;
             EditedListView.Name = "EditedListView";
             EditedListView.Size = new System.Drawing.Size(771, 666);
             EditedListView.TabIndex = 17;
             EditedListView.UseCompatibleStateImageBehavior = false;
+            EditedListView.View = System.Windows.Forms.View.Details;
             // 
             // label1
             // 

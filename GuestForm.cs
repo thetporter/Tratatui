@@ -57,6 +57,8 @@ namespace Tratatui
                 }
                 else link.Amount = int.Parse(item.SubItems[1].Text);
             }
+
+            table.State = TableState.Ordering;
             DB.Database.SaveChanges();
             DB.UpdateAll();
             WaitingForm wait = new WaitingForm();
@@ -81,6 +83,9 @@ namespace Tratatui
                 return;
             }
             table = DB.Database.Tables.Find(avail[RandomNumberGenerator.GetInt32(0, avail.Count)].Id);
+            table.State = TableState.Ordering;
+            DB.Database.SaveChanges();
+            DB.UpdateAll();
 
             //Заполнение меню
             foreach (Dish d in DB.Database.Dishes)

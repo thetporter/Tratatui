@@ -92,6 +92,9 @@ namespace Tratatui
                             DELETE FROM Staff
                             WHERE Id = {MainList.SelectedItems[0].Text};
                         """);
+                    DB.Database.ChangeTracker.Clear();
+                    DB.Database.SaveChanges();
+                    DB.UpdateAll();
                 }
             }
         }
@@ -192,9 +195,9 @@ namespace Tratatui
         {
             if (target.NameTextbox.Text.Trim().Length < 1 ||
                 target.DescTextbox.Text.Trim().Length < 1 ||
-                target.RecipeTextbox.Text.Trim().Length < 1)
+                target.RecipeTextbox.Text.Trim().Length < 1 ||
+                target.)
                 MessageBox.Show("Неверное заполнение информации о блюде! Блюдо должно иметь название, описание и рецепт.");
-            
             
             target.state = new InactiveState();
             target.state.target = target;
@@ -459,6 +462,8 @@ namespace Tratatui
                                                     WHERE Id = {edited.Id};
                                                 """);
             }
+            DB.Database.ChangeTracker.Clear();
+            DB.Database.SaveChanges();
             target.state = new AdminInactiveState();
             target.state.target = target;
             target.state.Invoke();
@@ -474,6 +479,7 @@ namespace Tratatui
             target.state = new AdminInactiveState();
             target.state.target = target;
             target.state.Invoke();
+            target.UpdateInfo();
         }
     }
 

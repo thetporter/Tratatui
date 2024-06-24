@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,7 +95,7 @@ namespace Tratatui
         {
             foreach (Table t in DB.Database.Tables)
             {
-                Button tbtn = target.Controls.OfType<Button>().ToList().Find(btn => { return btn.Text.EndsWith(t.Id.ToString()); });
+                Button tbtn = target.Controls.OfType<Button>().ToList().Find(btn => { return btn.Text.EndsWith($" {t.Id.ToString()}"); });
                 if (target.Controls.Contains(tbtn))
                 {
                     switch (t.State)
@@ -136,7 +137,7 @@ namespace Tratatui
                 if (ord.Type != OrderType.Order || !ord.Active) continue;
 
                 string staffonorder = "";
-                foreach (Staff st in DB.Database.Staff)
+                foreach (Staff st in DB.Database.Staff.Include(st => st.Orders))
                 {
                     if (st.Orders.Contains(ord)) staffonorder += st.Id.ToString() + ", ";
                 }
@@ -179,12 +180,16 @@ namespace Tratatui
                 if (target.OrderList.SelectedItems[0].SubItems[4].Text != "Сейчас принесем!")
                     target.button1.Enabled = true;
                 else target.button1.Enabled = false;
-                target.ActiveOrder = DB.Database.Orders.Find(int.Parse(target.OrderList.SelectedItems[0].Text));
-                foreach (Dish di in target.ActiveOrder.Dishes)
+                target.ActiveOrder = DB.Database.Orders.Include(o => o.Dishes).ToList()
+                    .Find(o => { return o.Id == int.Parse(target.OrderList.SelectedItems[0].Text); });
+                if (target.ActiveOrder.Dishes != null)
                 {
-                    target.EditedListView.Items.Add(new ListViewItem([di.Name,
+                    foreach (Dish di in target.ActiveOrder.Dishes)
+                    {
+                        target.EditedListView.Items.Add(new ListViewItem([di.Name,
                                                                       di.Description,
                                                                       di.Recipe]));
+                    }
                 }
             }
             else
@@ -236,9 +241,17 @@ namespace Tratatui
         }
         public void UpdateThings()
         {
+            if (DB.Database.Staff.Find(target.user.Id) == null)
+            {
+                target.Enabled = false;
+                MessageBox.Show("Эта учетная запись была удалена. Приносим свои извинения.");
+                target.Close();
+                return;
+            }
+
             foreach (Table t in DB.Database.Tables)
             {
-                Button tbtn = target.Controls.OfType<Button>().ToList().Find(btn => { return btn.Text.EndsWith(t.Id.ToString()); });
+                Button tbtn = target.Controls.OfType<Button>().ToList().Find(btn => { return btn.Text.EndsWith($" {t.Id.ToString()}"); });
                 if (target.Controls.Contains(tbtn))
                 {
                     switch (t.State)
@@ -274,11 +287,19 @@ namespace Tratatui
                     }
                 }
 
-                Order tableorder = DB.Database.Orders.ToList<Order>().Find(ord => { return (ord.Table.Id == t.Id && ord.Active); });
-                int StaffId = DB.Database.Staff.ToList<Staff>().Find(st => { return (st.Orders.Contains(tableorder)); }).Id;
-                if (StaffId == target.user.Id) tbtn.ForeColor = Color.Red;
-                else if (DB.Database.Staff.Find(StaffId) != null) tbtn.ForeColor = Color.Blue;
-                else tbtn.ForeColor = Control.DefaultForeColor;
+                Order tableorder = DB.Database.Orders.ToList<Order>().Find(ord => { return (ord.Table == t && ord.Active); });
+                if (tableorder == null || tableorder == default(Order)) { tbtn.ForeColor = Control.DefaultForeColor; } 
+                else 
+                {
+                    Staff temp = DB.Database.Staff.Include(s => s.Orders).ToList<Staff>().Find(st => { return st.Orders.Contains(tableorder); });
+                    if (temp != null && temp != default(Staff))
+                    {
+                        int StaffId = temp.Id;
+                        if (StaffId == target.user.Id) tbtn.ForeColor = Color.Red;
+                        else tbtn.ForeColor = Color.Blue;
+                    }
+                    else tbtn.ForeColor = Control.DefaultForeColor;
+                }
             }
 
             target.OrderList.Items.Clear();
@@ -287,7 +308,7 @@ namespace Tratatui
                 if (!ord.Active) continue;
 
                 string staffonorder = "";
-                foreach (Staff st in DB.Database.Staff)
+                foreach (Staff st in DB.Database.Staff.Include(st => st.Orders))
                 {
                     if (st.Orders.Contains(ord)) staffonorder += st.Id.ToString() + ", ";
                 }
@@ -304,29 +325,34 @@ namespace Tratatui
         {
             target.user.Orders.Add(target.ActiveOrder);
             DB.Database.SaveChanges();
-            UpdateThings();
+            DB.UpdateAll();
         }
         public void Button2Function(object sender, EventArgs e)
         {
+            target.ActiveOrder.Table.State = TableState.Served;
             target.ActiveOrder.Active = false;
             target.OrderList.SelectedItems.Clear();
             DB.Database.SaveChanges();
-            UpdateThings();
+            DB.UpdateAll();
         }
         public void TableButtonFunction(object sender, EventArgs e)
         {
             target.user.Orders.Add(DB.Database.Tables.ToList()
                                 .Find(tb => { return tb.Id == int.Parse((sender as Button).Text.Substring(7)); })
                                 .Orders.ToList().FindAll(or => { return or.Active; }).Last());
-            UpdateThings();
+            DB.UpdateAll();
         }
         public void OrderListSelectionChangeFunction(object sender, EventArgs e)
         {
             //Запросить информацию о стоимости заказа из БД и отобразить ее в EditedListView
+            target.EditedListView.Items.Clear();
 
             if (target.OrderList.SelectedItems.Count > 0)
             {
                 target.ActiveOrder = DB.Database.Orders.Find(int.Parse(target.OrderList.SelectedItems[0].Text));
+                target.ActiveOrder.Dishes = DB.Database.Dishes.Include(d => d.InOrders)
+                    .ToList().FindAll(d => { return d.InOrders.Contains(target.ActiveOrder); });
+
                 foreach (Dish dish in target.ActiveOrder.Dishes)
                 {
                     ListViewItem article = new ListViewItem();
@@ -339,6 +365,7 @@ namespace Tratatui
                     article.SubItems.Add("$" +
                         (int.Parse(article.SubItems[1].Text) * dish.Price).ToString()
                         );
+                    target.EditedListView.Items.Add(article);
                 }
 
                 if (target.OrderList.SelectedItems[0].SubItems[3].Text == "")
@@ -350,6 +377,10 @@ namespace Tratatui
                 {
                     target.button1.Text = "Отказаться от заказа";
                     target.button1.Enabled = true;
+                    if (target.OrderList.SelectedItems[0].SubItems[4].Text == StatusConverter.Do(4))
+                    {
+                        target.button2.Enabled = true;
+                    }
                 }
                 else target.button1.Enabled = false;
             }
@@ -398,7 +429,7 @@ namespace Tratatui
         {
             foreach (Table t in DB.Database.Tables)
             {
-                Button tbtn = target.Controls.OfType<Button>().ToList().Find(btn => { return btn.Text.EndsWith(t.Id.ToString()); });
+                Button tbtn = target.Controls.OfType<Button>().ToList().Find(btn => { return btn.Text.EndsWith($" {t.Id.ToString()}"); });
                 if (target.Controls.Contains(tbtn))
                 {
                     switch (t.State)
