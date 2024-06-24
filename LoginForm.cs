@@ -93,7 +93,10 @@ namespace Tratatui
 
         public static void UpdateAll()
         {
-            foreach (IUpdateable form in Application.OpenForms.OfType<IUpdateable>())
+            List<IUpdateable> l = new List<IUpdateable>();
+            l.AddRange(Application.OpenForms.OfType<IUpdateable>());
+
+            foreach (IUpdateable form in l)
             {
                     if (form != null && form is IUpdateable) form.UpdateInfo();
             }
