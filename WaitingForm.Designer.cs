@@ -69,35 +69,38 @@
             // WaiterLabel
             // 
             WaiterLabel.AutoSize = true;
-            WaiterLabel.Location = new System.Drawing.Point(199, 61);
+            WaiterLabel.Location = new System.Drawing.Point(250, 61);
             WaiterLabel.Name = "WaiterLabel";
             WaiterLabel.Size = new System.Drawing.Size(82, 15);
             WaiterLabel.TabIndex = 3;
             WaiterLabel.Text = "(не назначен)";
+            WaiterLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // StateLabel
             // 
             StateLabel.AutoSize = true;
-            StateLabel.Location = new System.Drawing.Point(180, 35);
+            StateLabel.Location = new System.Drawing.Point(231, 35);
             StateLabel.Name = "StateLabel";
             StateLabel.Size = new System.Drawing.Size(101, 15);
             StateLabel.TabIndex = 4;
             StateLabel.Text = "Только поступил";
+            StateLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // NumberLabel
             // 
             NumberLabel.AutoSize = true;
-            NumberLabel.Location = new System.Drawing.Point(250, 9);
+            NumberLabel.Location = new System.Drawing.Point(301, 9);
             NumberLabel.Name = "NumberLabel";
             NumberLabel.Size = new System.Drawing.Size(31, 15);
             NumberLabel.TabIndex = 5;
             NumberLabel.Text = "0069";
+            NumberLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // EditOrderButton
             // 
             EditOrderButton.Location = new System.Drawing.Point(12, 90);
             EditOrderButton.Name = "EditOrderButton";
-            EditOrderButton.Size = new System.Drawing.Size(269, 23);
+            EditOrderButton.Size = new System.Drawing.Size(323, 23);
             EditOrderButton.TabIndex = 6;
             EditOrderButton.Text = "Изменить заказ";
             EditOrderButton.UseVisualStyleBackColor = true;
@@ -107,7 +110,7 @@
             // 
             CancelOrderButton.Location = new System.Drawing.Point(12, 119);
             CancelOrderButton.Name = "CancelOrderButton";
-            CancelOrderButton.Size = new System.Drawing.Size(269, 23);
+            CancelOrderButton.Size = new System.Drawing.Size(323, 23);
             CancelOrderButton.TabIndex = 7;
             CancelOrderButton.Text = "Отменить заказ";
             CancelOrderButton.UseVisualStyleBackColor = true;
@@ -117,7 +120,7 @@
             // 
             CallWaiterButton.Location = new System.Drawing.Point(12, 148);
             CallWaiterButton.Name = "CallWaiterButton";
-            CallWaiterButton.Size = new System.Drawing.Size(269, 23);
+            CallWaiterButton.Size = new System.Drawing.Size(323, 23);
             CallWaiterButton.TabIndex = 8;
             CallWaiterButton.Text = "Позвать официанта";
             CallWaiterButton.UseVisualStyleBackColor = true;
@@ -127,7 +130,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(293, 180);
+            ClientSize = new System.Drawing.Size(347, 180);
             Controls.Add(CallWaiterButton);
             Controls.Add(CancelOrderButton);
             Controls.Add(EditOrderButton);

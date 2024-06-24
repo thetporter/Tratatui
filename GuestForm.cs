@@ -58,7 +58,7 @@ namespace Tratatui
                 else link.Amount = int.Parse(item.SubItems[1].Text);
             }
 
-            table.State = TableState.Ordering;
+            table.State = TableState.Waiting;
             DB.Database.SaveChanges();
             DB.UpdateAll();
             WaitingForm wait = new WaitingForm();

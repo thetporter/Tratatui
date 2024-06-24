@@ -13,6 +13,7 @@ namespace Tratatui
     public partial class FinishForm : Form
     {
         public Table table;
+        public List<Form> toClose = new List<Form>();
 
         public FinishForm(Table table)
         {
@@ -31,8 +32,12 @@ namespace Tratatui
             DB.Database.Orders.Add(clean);
 
             table.State = TableState.Finished;
-
             DB.Database.SaveChanges();
+
+            foreach (Form f in toClose) { f.Close(); }
+            this.Close();
+
+            
             DB.UpdateAll();
         }
     }

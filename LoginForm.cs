@@ -90,18 +90,12 @@ namespace Tratatui
 
     public static partial class DB
     {
+
         public static void UpdateAll()
         {
-            foreach (Form form in Application.OpenForms)
+            foreach (IUpdateable form in Application.OpenForms.OfType<IUpdateable>())
             {
-                try
-                {
-                    if (form != null && form is IUpdateable) (form as IUpdateable).UpdateInfo();  
-                }
-                catch (Exception)
-                {
-                    continue;
-                }
+                    if (form != null && form is IUpdateable) form.UpdateInfo();
             }
         }
     }

@@ -38,6 +38,7 @@ namespace Tratatui
             awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
             DB.Database.Orders.Remove(awaitedorder);
             DB.Database.Tables.Find(guestForm.table.Id).State = TableState.Free;
+            DB.Database.Orders.RemoveRange(DB.Database.Orders.Where(o => o.Table == guestForm.table));
             DB.Database.SaveChanges();
             DB.UpdateAll();
             this.Close();
@@ -63,19 +64,28 @@ namespace Tratatui
         {
             awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
             if (awaitedorder is null) return;
-            if (!awaitedorder.Active || DB.Database.Tables.Find(guestForm.table.Id).State == TableState.Served)
+            if (awaitedorder.Active && DB.Database.Tables.Find(guestForm.table.Id).State != TableState.Served)
             {
-                DB.Database.Tables.Find(guestForm.table.Id).State = TableState.Served;
-                DB.Database.SaveChanges();
-                FinishForm fin = new FinishForm(this.guestForm.table);
-                fin.Show();
-                this.guestForm.Close();
-                this.Close();
+                this.NumberLabel.Text = awaitedorder.Id.ToString();
+                this.StateLabel.Text = StatusConverter.Do(awaitedorder.Status);
+                Staff temp = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); });
+                if (temp is null) this.WaiterLabel.Text = "(не назначен)"; else this.WaiterLabel.Text = temp.Name;
+
             }
-            this.NumberLabel.Text = awaitedorder.Id.ToString();
-            this.StateLabel.Text = StatusConverter.Do(awaitedorder.Status);
-            Staff temp = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); });
-            if (temp is null) this.WaiterLabel.Text = "(не назначен)"; else this.WaiterLabel.Text = temp.Name;
+            else ExecuteFinisher();
+        }
+
+        private void ExecuteFinisher()
+        {
+            DB.Database.Tables.Find(guestForm.table.Id).State = TableState.Served;
+            DB.Database.SaveChanges();
+            FinishForm fin = new FinishForm(this.guestForm.table);
+            fin.toClose.Add(guestForm);
+            fin.toClose.Add(this);
+            fin.Show();
+            this.Enabled = false;
+            guestForm.Visible = false;
+            this.Visible = false;
         }
 
         private void WaitingForm_Load(object sender, EventArgs e)

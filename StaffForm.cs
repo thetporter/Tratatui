@@ -24,6 +24,7 @@ namespace Tratatui
             {
                 case StaffType.Waiter:
                     strat = new WaiterStrategy();
+                    user.Orders = new List<Order>();
                     break;
                 case StaffType.Chef:
                     strat = new ChefStrategy();
@@ -70,6 +71,8 @@ namespace Tratatui
 
         public void SetVisuals()
         {
+            target.Text = $"Трататуй - окно повара {target.user.Name}";
+
             target.EditedListView.Columns.Add("Блюдо", 250);
             target.EditedListView.Columns.Add("Кол-во", 50);
             target.EditedListView.Columns.Add("Рецепт", 900);
@@ -154,6 +157,7 @@ namespace Tratatui
         {
             target.ActiveOrder.Status += 1;
             DB.Database.SaveChanges();
+            target.OrderList.SelectedItems.Clear();
             DB.UpdateAll();
         }
         public void Button2Function(object sender, EventArgs e)
@@ -203,7 +207,12 @@ namespace Tratatui
         }
         public void EditedListSelectionChangeFunction(object sender, EventArgs e)
         {
-            target.TopLabel.Text = target.EditedListView.SelectedItems[0].SubItems[2].Text;
+            if (target.EditedListView.SelectedItems.Count > 0)
+                target.TopLabel.Text = target.EditedListView.SelectedItems[0].SubItems[2].Text;
+            else target.TopLabel.Text = """
+                    Нажмите на столик, чтобы отобразить его заказ.
+                    Информация о заказе появится здесь.
+                """;
         }
     }
 
@@ -218,6 +227,8 @@ namespace Tratatui
         public StaffForm TargetForm { get { return target; } set { target = value; } }
         public void SetVisuals()
         {
+            target.Text = $"Трататуй - окно официанта {target.user.Name}";
+
             target.EditedListView.Columns.Add("Блюдо", 250);
             target.EditedListView.Columns.Add("Количество", 260);
             target.EditedListView.Columns.Add("Сумма", 261);
@@ -250,7 +261,6 @@ namespace Tratatui
                 return;
             }
 
-            DB.Database.ChangeTracker.Clear();
             foreach (Table t in DB.Database.Tables)
             {
                 Button tbtn = target.Controls.OfType<Button>().ToList().Find(btn => { return btn.Text.EndsWith($" {t.Id.ToString()}"); });
@@ -264,7 +274,7 @@ namespace Tratatui
                             break;
                         case TableState.Ordering:
                             tbtn.BackColor = Control.DefaultBackColor;
-                            tbtn.Enabled = false;
+                            tbtn.Enabled = true;
                             break;
                         case TableState.Waiting:
                             tbtn.BackColor = Color.Green;
@@ -276,11 +286,11 @@ namespace Tratatui
                             break;
                         case TableState.Served:
                             tbtn.BackColor = Control.DefaultBackColor;
-                            tbtn.Enabled = false;
+                            tbtn.Enabled = true;
                             break;
                         case TableState.Finished:
                             tbtn.BackColor = Color.CadetBlue;
-                            tbtn.Enabled = false;
+                            tbtn.Enabled = true;
                             break;
                         default:
                             tbtn.BackColor = Control.DefaultBackColor;
@@ -331,7 +341,19 @@ namespace Tratatui
         }
         public void Button2Function(object sender, EventArgs e)
         {
-            target.ActiveOrder.Table.State = TableState.Served;
+            switch (target.ActiveOrder.Type)
+            {
+                case OrderType.Cleanup:
+                    target.ActiveOrder.Table.State = TableState.Free;
+                    break;
+                case OrderType.Request:
+                    target.ActiveOrder.Table.State = TableState.Waiting;
+                    break;
+                case OrderType.Order:
+                    target.ActiveOrder.Table.State = TableState.Served;
+                    break;
+            }
+            
             target.ActiveOrder.Active = false;
             target.OrderList.SelectedItems.Clear();
             DB.Database.SaveChanges();
@@ -339,6 +361,11 @@ namespace Tratatui
         }
         public void TableButtonFunction(object sender, EventArgs e)
         {
+            if (!DB.Database.Orders.Include(o => o.Table)
+                .Where(o => 
+                    o.Table.Id.ToString() == (sender as Button).Text.Substring(7) && o.Active
+                    && !DB.Database.Staff.Include(st => st.Orders)
+                        .Where(st => st.Orders.Contains(o)).Any()).Any()) { return; }
             target.user.Orders.Add(DB.Database.Tables.ToList()
                                 .Find(tb => { return tb.Id == int.Parse((sender as Button).Text.Substring(7)); })
                                 .Orders.ToList().FindAll(or => { return or.Active; }).Last());
@@ -357,6 +384,7 @@ namespace Tratatui
 
                 foreach (Dish dish in target.ActiveOrder.Dishes)
                 {
+                    //Заполнение таблицы EditedListView
                     ListViewItem article = new ListViewItem();
                     article.Text = dish.Name;
                     article.SubItems.Add(DB.Database.DishOrder.ToList()
@@ -379,7 +407,7 @@ namespace Tratatui
                 {
                     target.button1.Text = "Отказаться от заказа";
                     target.button1.Enabled = true;
-                    if (target.OrderList.SelectedItems[0].SubItems[4].Text == StatusConverter.Do(4))
+                    if (target.ActiveOrder.Status == 4 || target.ActiveOrder.Type != OrderType.Order)
                     {
                         target.button2.Enabled = true;
                     }
@@ -409,6 +437,8 @@ namespace Tratatui
         public StaffForm TargetForm { get { return target; } set { target = value; } }
         public void SetVisuals()
         {
+            target.Text = $"Трататуй - окно администратора {target.user.Name}";
+
             target.EditedListView.Columns.Add("Код", 50);
             target.EditedListView.Columns.Add("Имя", 460);
             target.EditedListView.Columns.Add("Заказы", 261);
