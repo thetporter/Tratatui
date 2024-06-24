@@ -35,7 +35,7 @@
             System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Десерты", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Напитки", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Прочее", System.Windows.Forms.HorizontalAlignment.Left);
-            listView1 = new System.Windows.Forms.ListView();
+            MainList = new System.Windows.Forms.ListView();
             columnHeader1 = new System.Windows.Forms.ColumnHeader();
             columnHeader2 = new System.Windows.Forms.ColumnHeader();
             DishName = new System.Windows.Forms.Label();
@@ -52,12 +52,14 @@
             label1 = new System.Windows.Forms.Label();
             TypeBox = new System.Windows.Forms.ComboBox();
             PriceBox = new System.Windows.Forms.NumericUpDown();
+            PasswordBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)PriceBox).BeginInit();
             SuspendLayout();
             // 
-            // listView1
+            // MainList
             // 
-            listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1, columnHeader2 });
+            MainList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1, columnHeader2 });
+            MainList.FullRowSelect = true;
             listViewGroup1.Header = "Салаты и закуски";
             listViewGroup1.Name = "DishGroup1";
             listViewGroup2.Header = "Главные блюда";
@@ -70,15 +72,15 @@
             listViewGroup5.Name = "DishGroup5";
             listViewGroup6.Header = "Прочее";
             listViewGroup6.Name = "DishGroup6";
-            listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] { listViewGroup1, listViewGroup2, listViewGroup3, listViewGroup4, listViewGroup5, listViewGroup6 });
-            listView1.Location = new System.Drawing.Point(12, 49);
-            listView1.Name = "listView1";
-            listView1.ShowItemToolTips = true;
-            listView1.Size = new System.Drawing.Size(317, 389);
-            listView1.TabIndex = 0;
-            listView1.UseCompatibleStateImageBehavior = false;
-            listView1.View = System.Windows.Forms.View.Details;
-            listView1.SelectedIndexChanged += listView1_SelectedIndexChanged;
+            MainList.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] { listViewGroup1, listViewGroup2, listViewGroup3, listViewGroup4, listViewGroup5, listViewGroup6 });
+            MainList.Location = new System.Drawing.Point(12, 49);
+            MainList.Name = "MainList";
+            MainList.ShowItemToolTips = true;
+            MainList.Size = new System.Drawing.Size(317, 389);
+            MainList.TabIndex = 0;
+            MainList.UseCompatibleStateImageBehavior = false;
+            MainList.View = System.Windows.Forms.View.Details;
+            MainList.SelectedIndexChanged += listView1_SelectedIndexChanged;
             // 
             // columnHeader1
             // 
@@ -234,11 +236,22 @@
             PriceBox.Size = new System.Drawing.Size(268, 23);
             PriceBox.TabIndex = 14;
             // 
+            // PasswordBox
+            // 
+            PasswordBox.Location = new System.Drawing.Point(335, 73);
+            PasswordBox.Name = "PasswordBox";
+            PasswordBox.PlaceholderText = "Новый пароль (оставить пустым, если нет изменений)";
+            PasswordBox.Size = new System.Drawing.Size(453, 23);
+            PasswordBox.TabIndex = 15;
+            PasswordBox.UseSystemPasswordChar = true;
+            PasswordBox.Visible = false;
+            // 
             // RecipesForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(800, 450);
+            Controls.Add(PasswordBox);
             Controls.Add(PriceBox);
             Controls.Add(TypeBox);
             Controls.Add(label1);
@@ -252,7 +265,7 @@
             Controls.Add(RecipeBox);
             Controls.Add(DishDescription);
             Controls.Add(DishName);
-            Controls.Add(listView1);
+            Controls.Add(MainList);
             Name = "RecipesForm";
             Text = "Книга рецептов";
             ((System.ComponentModel.ISupportInitialize)PriceBox).EndInit();
@@ -266,7 +279,7 @@
         private System.Windows.Forms.ToolTip DescTooltip;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        public System.Windows.Forms.ListView listView1;
+        public System.Windows.Forms.ListView MainList;
         public System.Windows.Forms.ListBox RecipeBox;
         public System.Windows.Forms.Button AddButton;
         public System.Windows.Forms.Button EditButton;
@@ -278,5 +291,6 @@
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.ComboBox TypeBox;
         public System.Windows.Forms.NumericUpDown PriceBox;
+        public System.Windows.Forms.TextBox PasswordBox;
     }
 }

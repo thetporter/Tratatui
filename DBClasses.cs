@@ -70,6 +70,11 @@ namespace Tratatui
         public ICollection<Dish> Dishes { get; set; }
         [Required] public Table Table { get; set; }
         public int Status { get; set; }
+
+        public override string ToString()
+        {
+            return $"Заказ {Id.ToString()} от столика {Table.Id.ToString()} типа {Type.ToString()}, сделанный в {CreationTime.ToString()}.";
+        }
     }
 
     public static class StatusConverter
@@ -150,6 +155,10 @@ namespace Tratatui
             modelBuilder.Entity<Order>()
                 .Property(o => o.Id)
                 .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Dish>()
+                .HasIndex(d => d.Name)
+                .IsUnique();
         }
     }
 

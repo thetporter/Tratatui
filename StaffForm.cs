@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -80,8 +81,8 @@ namespace Tratatui
 
             target.OrderList.SelectedIndexChanged += OrderListSelectionChangeFunction;
             target.EditedListView.SelectedIndexChanged += EditedListSelectionChangeFunction;
-
-            foreach (Button btn in target.Controls)
+            
+            foreach (Button btn in target.Controls.OfType<Button>())
                 if (btn.Text.StartsWith("Столик ")) btn.Click += TableButtonFunction;
 
             target.TopLabel.Text = """
@@ -129,6 +130,7 @@ namespace Tratatui
                     }
                 }
             }
+            target.OrderList.Items.Clear();
             foreach (Order ord in DB.Database.Orders)
             {
                 if (ord.Type != OrderType.Order || !ord.Active) continue;
@@ -223,7 +225,7 @@ namespace Tratatui
 
             target.OrderList.SelectedIndexChanged += OrderListSelectionChangeFunction;
 
-            foreach (Button btn in target.Controls)
+            foreach (Button btn in target.Controls.OfType<Button>())
                 if (btn.Text.StartsWith("Столик ")) btn.Click += TableButtonFunction;
 
             target.TopLabel.Text = """
@@ -279,6 +281,7 @@ namespace Tratatui
                 else tbtn.ForeColor = Control.DefaultForeColor;
             }
 
+            target.OrderList.Items.Clear();
             foreach (Order ord in DB.Database.Orders)
             {
                 if (!ord.Active) continue;
@@ -431,6 +434,7 @@ namespace Tratatui
                     }
                 }
             }
+            target.OrderList.Items.Clear();
             foreach (Order ord in DB.Database.Orders)
             {
                 if (!ord.Active) continue;
@@ -455,7 +459,6 @@ namespace Tratatui
         public void Button1Function(object sender, EventArgs e)
         {
             RecipesForm f = new RecipesForm(new InactiveState());
-            f.state = new InactiveState();
             f.Show();
         }
         public void Button2Function(object sender, EventArgs e)

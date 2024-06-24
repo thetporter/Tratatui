@@ -61,6 +61,7 @@ namespace Tratatui
             DB.UpdateAll();
             WaitingForm wait = new WaitingForm();
             wait.guestForm = this;
+            wait.awaitedorder = order;
             wait.NumberLabel.Text = order.Id.ToString();
             wait.Show();
             this.Enabled = false;
@@ -174,7 +175,7 @@ namespace Tratatui
 
         private void GuestForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (Application.OpenForms.Count == 1) Application.Exit();
+            //if (Application.OpenForms.Count == 1) Application.Exit();
         }
     }
 }

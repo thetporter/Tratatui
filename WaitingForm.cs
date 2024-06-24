@@ -54,16 +54,19 @@ namespace Tratatui
         public void UpdateInfo()
         {
             awaitedorder = DB.Database.Orders.Find(awaitedorder.Id);
+            if (awaitedorder is null) return;
             this.NumberLabel.Text = awaitedorder.Id.ToString();
             this.StateLabel.Text = StatusConverter.Do(awaitedorder.Status);
-            this.WaiterLabel.Text = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); }).Name;
+            Staff temp = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); });
+            if (temp is null) this.WaiterLabel.Text = "(не назначен)"; else this.WaiterLabel.Text = temp.Name;
         }
 
         private void WaitingForm_Load(object sender, EventArgs e)
         {
             this.NumberLabel.Text = awaitedorder.Id.ToString();
             this.StateLabel.Text = StatusConverter.Do(awaitedorder.Status);
-            this.WaiterLabel.Text = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); }).Name;
+            Staff temp = DB.Database.Staff.Include(e => e.Orders).ToList().Find(st => { return st.Orders.Contains(awaitedorder); });
+            if (temp is null) this.WaiterLabel.Text = "(не назначен)"; else this.WaiterLabel.Text = temp.Name;
         }
     }
 }

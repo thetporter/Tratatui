@@ -96,7 +96,7 @@ namespace Tratatui
             {
                 try
                 {
-                    if (form != null) (form as IUpdateable).UpdateInfo();  
+                    if (form != null && form is IUpdateable) (form as IUpdateable).UpdateInfo();  
                 }
                 catch (Exception)
                 {
