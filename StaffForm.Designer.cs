@@ -335,7 +335,6 @@
         private System.Windows.Forms.Button Table14;
         private System.Windows.Forms.Button Table15;
         private System.Windows.Forms.Button Table16;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;

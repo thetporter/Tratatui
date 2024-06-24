@@ -24,13 +24,24 @@ namespace Tratatui
 
         private void OrderButton_Click(object sender, EventArgs e)
         {
+            if (OrderList.Items.Count == 0) return;
+
+            //Создание заказа
             Order order = new Order();
             order.Status = 0;
             order.Type = OrderType.Order;
             order.CreationTime = TimeOnly.Parse(DateTime.Now.TimeOfDay.ToString());
+            order.Active = true;
+            order.Table = table;
+            order.Dishes = new List<Dish>();
+            DB.Database.Orders.Add(order);
+            DB.Database.SaveChanges();
+
+            //Наполнение заказа, создание или изменение соответствующих объектов DishorderLink
             foreach (ListViewItem item in OrderList.Items)
             {
                 Dish dish = Menu.Find(d => {  return d.Name == item.Text; });
+                if (dish == null) { MessageBox.Show("Что-то пошло не так. Приносим свои извинения!"); return; }
                 order.Dishes.Add(dish);
 
                 DishorderLink link = DB.Database.DishOrder.Find(order.Id, dish.Id);
@@ -38,14 +49,16 @@ namespace Tratatui
                 {
                     link = new DishorderLink();
                     link.DishId = dish.Id;
+                    link.Dish = dish;
                     link.OrderId = order.Id;
+                    link.Order = order;
                     link.Amount = int.Parse(item.SubItems[1].Text);
                     DB.Database.DishOrder.Add(link);
-                } else link.Amount = int.Parse(item.SubItems[1].Text);
-
-                DB.Database.SaveChanges();
-                DB.UpdateAll();
+                }
+                else link.Amount = int.Parse(item.SubItems[1].Text);
             }
+            DB.Database.SaveChanges();
+            DB.UpdateAll();
             WaitingForm wait = new WaitingForm();
             wait.guestForm = this;
             wait.NumberLabel.Text = order.Id.ToString();
@@ -75,8 +88,8 @@ namespace Tratatui
 
                 ListViewItem dish = new ListViewItem([d.Name,
                                                       d.Description,
-                                                      $"${d.Price.ToString()}"],
-                                                      "0");
+                                                      $"${d.Price.ToString()}",
+                                                      "0"]);
                 ListViewGroup group;
                 switch (d.Type)
                 {

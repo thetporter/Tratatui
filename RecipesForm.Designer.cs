@@ -34,6 +34,7 @@
             System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Гарнир", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Десерты", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Напитки", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Прочее", System.Windows.Forms.HorizontalAlignment.Left);
             listView1 = new System.Windows.Forms.ListView();
             columnHeader1 = new System.Windows.Forms.ColumnHeader();
             columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -67,7 +68,9 @@
             listViewGroup4.Name = "DishGroup4";
             listViewGroup5.Header = "Напитки";
             listViewGroup5.Name = "DishGroup5";
-            listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] { listViewGroup1, listViewGroup2, listViewGroup3, listViewGroup4, listViewGroup5 });
+            listViewGroup6.Header = "Прочее";
+            listViewGroup6.Name = "DishGroup6";
+            listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] { listViewGroup1, listViewGroup2, listViewGroup3, listViewGroup4, listViewGroup5, listViewGroup6 });
             listView1.Location = new System.Drawing.Point(12, 49);
             listView1.Name = "listView1";
             listView1.ShowItemToolTips = true;
@@ -136,6 +139,7 @@
             // 
             // EditButton
             // 
+            EditButton.Enabled = false;
             EditButton.Location = new System.Drawing.Point(129, 12);
             EditButton.Name = "EditButton";
             EditButton.Size = new System.Drawing.Size(91, 23);
@@ -146,6 +150,7 @@
             // 
             // DeleteButton
             // 
+            DeleteButton.Enabled = false;
             DeleteButton.Location = new System.Drawing.Point(238, 12);
             DeleteButton.Name = "DeleteButton";
             DeleteButton.Size = new System.Drawing.Size(91, 23);

@@ -96,11 +96,11 @@ namespace Tratatui
             {
                 try
                 {
-                    (form as IUpdateable).UpdateInfo();  
+                    if (form != null) (form as IUpdateable).UpdateInfo();  
                 }
                 catch (Exception)
                 {
-                    throw;
+                    continue;
                 }
             }
         }

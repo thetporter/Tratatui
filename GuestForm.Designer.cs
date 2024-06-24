@@ -31,25 +31,25 @@ namespace Tratatui
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new System.Windows.Forms.Label();
-            OrderButton = new System.Windows.Forms.Button();
-            TotalCostLabel = new System.Windows.Forms.Label();
-            MenuItem = new System.Windows.Forms.ListView();
-            System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Салаты и закуски", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("Главные блюда", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Гарнир", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Десерты", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Напитки", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup21 = new System.Windows.Forms.ListViewGroup("Прочее", System.Windows.Forms.HorizontalAlignment.Left);
-            NameColumn = new System.Windows.Forms.ColumnHeader();
-            DescriptionColumn = new System.Windows.Forms.ColumnHeader();
-            CostColumn = new System.Windows.Forms.ColumnHeader();
-            AmountColumn = new System.Windows.Forms.ColumnHeader();
-            amtSelector = new System.Windows.Forms.NumericUpDown();
-            OrderList = new System.Windows.Forms.ListView();
-            NameColumn0 = new System.Windows.Forms.ColumnHeader();
-            AmountColumn0 = new System.Windows.Forms.ColumnHeader();
-            TotalColumn = new System.Windows.Forms.ColumnHeader();
+            ListViewGroup listViewGroup1 = new ListViewGroup("Салаты и закуски", HorizontalAlignment.Left);
+            ListViewGroup listViewGroup2 = new ListViewGroup("Главные блюда", HorizontalAlignment.Left);
+            ListViewGroup listViewGroup3 = new ListViewGroup("Гарнир", HorizontalAlignment.Left);
+            ListViewGroup listViewGroup4 = new ListViewGroup("Десерты", HorizontalAlignment.Left);
+            ListViewGroup listViewGroup5 = new ListViewGroup("Напитки", HorizontalAlignment.Left);
+            ListViewGroup listViewGroup6 = new ListViewGroup("Прочее", HorizontalAlignment.Left);
+            label1 = new Label();
+            OrderButton = new Button();
+            TotalCostLabel = new Label();
+            MenuItem = new ListView();
+            NameColumn = new ColumnHeader();
+            DescriptionColumn = new ColumnHeader();
+            CostColumn = new ColumnHeader();
+            AmountColumn = new ColumnHeader();
+            amtSelector = new NumericUpDown();
+            OrderList = new ListView();
+            NameColumn0 = new ColumnHeader();
+            AmountColumn0 = new ColumnHeader();
+            TotalColumn = new ColumnHeader();
             ((System.ComponentModel.ISupportInitialize)amtSelector).BeginInit();
             SuspendLayout();
             // 
@@ -57,7 +57,7 @@ namespace Tratatui
             // 
             label1.AutoSize = true;
             label1.Location = new System.Drawing.Point(950, 423);
-            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(90, 15);
             label1.TabIndex = 1;
@@ -66,7 +66,7 @@ namespace Tratatui
             // OrderButton
             // 
             OrderButton.Location = new System.Drawing.Point(950, 450);
-            OrderButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            OrderButton.Margin = new Padding(4, 3, 4, 3);
             OrderButton.Name = "OrderButton";
             OrderButton.Size = new System.Drawing.Size(327, 48);
             OrderButton.TabIndex = 2;
@@ -76,11 +76,11 @@ namespace Tratatui
             // 
             // TotalCostLabel
             // 
-            TotalCostLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            TotalCostLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             TotalCostLabel.AutoSize = true;
             TotalCostLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
             TotalCostLabel.Location = new System.Drawing.Point(1160, 418);
-            TotalCostLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            TotalCostLabel.Margin = new Padding(4, 0, 4, 0);
             TotalCostLabel.MinimumSize = new System.Drawing.Size(117, 0);
             TotalCostLabel.Name = "TotalCostLabel";
             TotalCostLabel.Size = new System.Drawing.Size(117, 20);
@@ -90,29 +90,29 @@ namespace Tratatui
             // 
             // MenuItem
             // 
-            MenuItem.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { NameColumn, DescriptionColumn, CostColumn, AmountColumn });
-            listViewGroup16.Header = "Салаты и закуски";
-            listViewGroup16.Name = "DishGroup1";
-            listViewGroup17.Header = "Главные блюда";
-            listViewGroup17.Name = "DishGroup2";
-            listViewGroup18.Header = "Гарнир";
-            listViewGroup18.Name = "DishGroup3";
-            listViewGroup19.Header = "Десерты";
-            listViewGroup19.Name = "DishGroup4";
-            listViewGroup20.Header = "Напитки";
-            listViewGroup20.Name = "DishGroup5";
-            listViewGroup21.Header = "Прочее";
-            listViewGroup21.Name = "DishGroup6";
-            MenuItem.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] { listViewGroup16, listViewGroup17, listViewGroup18, listViewGroup19, listViewGroup20 });
+            MenuItem.Columns.AddRange(new ColumnHeader[] { NameColumn, DescriptionColumn, CostColumn, AmountColumn });
             MenuItem.FullRowSelect = true;
             MenuItem.GridLines = true;
+            listViewGroup1.Header = "Салаты и закуски";
+            listViewGroup1.Name = "DishGroup1";
+            listViewGroup2.Header = "Главные блюда";
+            listViewGroup2.Name = "DishGroup2";
+            listViewGroup3.Header = "Гарнир";
+            listViewGroup3.Name = "DishGroup3";
+            listViewGroup4.Header = "Десерты";
+            listViewGroup4.Name = "DishGroup4";
+            listViewGroup5.Header = "Напитки";
+            listViewGroup5.Name = "DishGroup5";
+            listViewGroup6.Header = "Прочее";
+            listViewGroup6.Name = "listViewGroup1";
+            MenuItem.Groups.AddRange(new ListViewGroup[] { listViewGroup1, listViewGroup2, listViewGroup3, listViewGroup4, listViewGroup5, listViewGroup6 });
             MenuItem.Location = new System.Drawing.Point(12, 12);
             MenuItem.MultiSelect = false;
             MenuItem.Name = "MenuItem";
             MenuItem.Size = new System.Drawing.Size(931, 486);
             MenuItem.TabIndex = 5;
             MenuItem.UseCompatibleStateImageBehavior = false;
-            MenuItem.View = System.Windows.Forms.View.Details;
+            MenuItem.View = View.Details;
             MenuItem.SelectedIndexChanged += MenuItem_SelectedIndexChanged;
             // 
             // NameColumn
@@ -128,7 +128,7 @@ namespace Tratatui
             // CostColumn
             // 
             CostColumn.Text = "Цена";
-            CostColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            CostColumn.TextAlign = HorizontalAlignment.Right;
             CostColumn.Width = 75;
             // 
             // AmountColumn
@@ -148,7 +148,7 @@ namespace Tratatui
             // 
             // OrderList
             // 
-            OrderList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { NameColumn0, AmountColumn0, TotalColumn });
+            OrderList.Columns.AddRange(new ColumnHeader[] { NameColumn0, AmountColumn0, TotalColumn });
             OrderList.FullRowSelect = true;
             OrderList.GridLines = true;
             OrderList.Location = new System.Drawing.Point(950, 12);
@@ -157,7 +157,7 @@ namespace Tratatui
             OrderList.Size = new System.Drawing.Size(328, 399);
             OrderList.TabIndex = 7;
             OrderList.UseCompatibleStateImageBehavior = false;
-            OrderList.View = System.Windows.Forms.View.Details;
+            OrderList.View = View.Details;
             // 
             // NameColumn0
             // 
@@ -167,7 +167,7 @@ namespace Tratatui
             // AmountColumn0
             // 
             AmountColumn0.Text = "Кол-во";
-            AmountColumn0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            AmountColumn0.TextAlign = HorizontalAlignment.Right;
             AmountColumn0.Width = 75;
             // 
             // TotalColumn
@@ -178,7 +178,7 @@ namespace Tratatui
             // GuestForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(1290, 510);
             Controls.Add(OrderList);
             Controls.Add(amtSelector);
@@ -186,7 +186,7 @@ namespace Tratatui
             Controls.Add(TotalCostLabel);
             Controls.Add(OrderButton);
             Controls.Add(label1);
-            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Margin = new Padding(4, 3, 4, 3);
             Name = "GuestForm";
             Text = "Трататуй - Меню";
             FormClosed += GuestForm_FormClosed;

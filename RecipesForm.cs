@@ -17,9 +17,13 @@ namespace Tratatui
         public int StoredId;
         public IEditingState state;
 
-        public RecipesForm()
+        public RecipesForm(IEditingState state)
         {
             InitializeComponent();
+            this.state = state;
+            this.state.target = this;
+            state.Invoke();
+            UpdateInfo();
         }
 
         private void DishDescription_MouseHover(object sender, EventArgs e)
@@ -185,12 +189,12 @@ namespace Tratatui
                 target.RecipeTextbox.Text.Trim().Length < 1)
                 MessageBox.Show("Неверное заполнение информации о блюде! Блюдо должно иметь название, описание и рецепт.");
             
-            DB.Database.Database.ExecuteSql($"""
-                                               INSERT INTO Dishes (Name, Description, Price) 
-                                               VALUES
-                                                      ({target.NameTextbox.Text.Trim()}, {target.DescTextbox.Text},
-                                                      {target.PriceBox.Value}, {})
-                                               """);
+            //DB.Database.Database.ExecuteSql($"""
+            //                                   INSERT INTO Dishes (Name, Description, Price) 
+            //                                   VALUES
+            //                                          ({target.NameTextbox.Text.Trim()}, {target.DescTextbox.Text},
+            //                                          {target.PriceBox.Value},)
+            //                                   """);
             target.state = new InactiveState();
             target.state.target = target;
             target.state.Invoke();

@@ -155,8 +155,7 @@ namespace Tratatui
         }
         public void Button2Function(object sender, EventArgs e)
         {
-            RecipesForm recipebook = new RecipesForm();
-            recipebook.state = new InactiveState();
+            RecipesForm recipebook = new RecipesForm(new InactiveState());
             recipebook.Show();
         }
         public void TableButtonFunction(object sender, EventArgs e)
@@ -439,6 +438,7 @@ namespace Tratatui
                 string staffonorder = "";
                 foreach (Staff st in DB.Database.Staff)
                 {
+                    if (st.Orders == null) continue;
                     if (st.Orders.Contains(ord)) staffonorder += st.Id.ToString() + ", ";
                 }
                 staffonorder = staffonorder.TrimEnd([',', ' ']);
@@ -454,14 +454,13 @@ namespace Tratatui
         }
         public void Button1Function(object sender, EventArgs e)
         {
-            RecipesForm f = new RecipesForm();
+            RecipesForm f = new RecipesForm(new InactiveState());
             f.state = new InactiveState();
             f.Show();
         }
         public void Button2Function(object sender, EventArgs e)
         {
-            RecipesForm f = new RecipesForm();
-            f.state = new AdminInactiveState();
+            RecipesForm f = new RecipesForm(new AdminInactiveState());
             f.Show();
         }
         public void TableButtonFunction(object sender, EventArgs e)
