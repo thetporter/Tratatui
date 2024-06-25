@@ -192,7 +192,8 @@ namespace Tratatui
                     foreach (Dish di in target.ActiveOrder.Dishes)
                     {
                         target.EditedListView.Items.Add(new ListViewItem([di.Name,
-                                                                      di.Description,
+                                                                      DB.Database.DishOrder
+                                                                      .Find(target.ActiveOrder.Id, di.Id).Amount.ToString(),
                                                                       di.Recipe]));
                     }
                 }
