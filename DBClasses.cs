@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using System.Linq.Expressions;
+using System.ComponentModel.Design;
 
 namespace Tratatui
 {
@@ -182,19 +183,45 @@ namespace Tratatui
                 DB.Database.SaveChanges();
             }
 
-            //Столы
-            if (DB.Database.Tables.Count() != 16)
+            #region Столы - проверить наличие, сбросить состояние при невозможности изменения стандартным образом
+            //Проверка на добавление
+            DB.Database.Tables.RemoveRange(from table in DB.Database.Tables where table.Id > 16 select table);
+            for (int i = 1; i <= 16; i++)
             {
-                DB.Database.Tables.RemoveRange(from table in DB.Database.Tables select table);
-                for (int i = 0; i < 16; i++)
+                //Проверка на удаление
+                if (DB.Database.Tables.Find(i) == null)
                 {
+                    //Создать, если нет
                     Table table = new Table();
-                    table.Id = i + 1;
+                    table.Id = i;
                     table.State = TableState.Free;
                     DB.Database.Tables.Add(table);
                 }
-                DB.Database.SaveChanges();
+                else
+                {
+                    //Перевести в стандартное или изменяемое состояние при неизменяемом состоянии
+                    Table table = DB.Database.Tables.Include(t => t.Orders).Where(t => t.Id == i).First();
+                    if (table.State == TableState.Ordering) table.State = TableState.Free;
+                    if (table.State == TableState.Calling && !table.Orders.Where(o => OrderType.Request == o.Type).Any()) table.State = TableState.Waiting;
+                    if (table.State == TableState.Waiting && !table.Orders.Where(o => OrderType.Order == o.Type).Any()) table.State = TableState.Free;
+                    if (table.State == TableState.Served && !Application.OpenForms.OfType<FinishForm>()
+                                                            .Where(ff => ff.table == table).Any())
+                    {
+                        table.State = TableState.Finished;
+                        Order ord = new Order();
+                        ord.Type = OrderType.Cleanup;
+                        ord.Table = table;
+                        ord.Status = 0;
+                        ord.Active = true;
+                        ord.CreationTime = TimeOnly.Parse(DateTime.Now.TimeOfDay.ToString());
+                        DB.Database.Orders.Add(ord);
+                    }
+                    if (table.State == TableState.Finished && !table.Orders.Where(o => OrderType.Cleanup == o.Type).Any()) table.State = TableState.Free;
+
+                }
             }
+            DB.Database.SaveChanges();
+            #endregion
 
             //Стандартные блюда
             if (DB.Database.Dishes.Count() < 6)
